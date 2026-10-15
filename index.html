@@ -1,0 +1,1967 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>NOVA Student CRM</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Noto+Kufi+Arabic:wght@600;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#141414; --ink-2:#4a4a4a; --ink-3:#7a7a7a;
+  --paper:#ffffff; --bg:#f2f2f0; --line:#e1e1de; --line-2:#cfcfcb;
+  --red:#d3121c; --red-ink:#ffffff; --red-soft:#fdeaea;
+  --side:#000000; --side-ink:#f1f1f1; --side-dim:#9a9a9a;
+  --ok:#17794a; --ok-soft:#e5f4ec; --warn:#9a6200; --warn-soft:#fff2d9; --info:#1f5a99; --info-soft:#e6f0fb;
+  --r-sm:6px; --r:10px; --r-lg:16px;
+  --f-head:'Noto Kufi Arabic','IBM Plex Sans Arabic',Tahoma,system-ui,sans-serif;
+  --f-body:'IBM Plex Sans Arabic',Tahoma,'Segoe UI',system-ui,sans-serif;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --ink:#f1f1ef; --ink-2:#c3c3c0; --ink-3:#8f8f8c; --paper:#1a1a1a; --bg:#101010; --line:#2c2c2b; --line-2:#3c3c3a;
+    --red:#ef3a43; --red-soft:#3a1517; --ok:#4cc38a; --ok-soft:#14291f; --warn:#e8b04a; --warn-soft:#322815; --info:#6fb0f0; --info-soft:#14243a; --side:#000;
+  }
+}
+:root[data-theme="dark"]{
+  --ink:#f1f1ef; --ink-2:#c3c3c0; --ink-3:#8f8f8c; --paper:#1a1a1a; --bg:#101010; --line:#2c2c2b; --line-2:#3c3c3a;
+  --red:#ef3a43; --red-soft:#3a1517; --ok:#4cc38a; --ok-soft:#14291f; --warn:#e8b04a; --warn-soft:#322815; --info:#6fb0f0; --info-soft:#14243a; --side:#000;
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.7;-webkit-font-smoothing:antialiased}
+h1,h2,h3,h4{font-family:var(--f-head);margin:0;line-height:1.4;font-weight:700}
+h1{font-size:22px} h2{font-size:17px} h3{font-size:15px}
+button,input,select,textarea{font:inherit;color:inherit}
+a{color:var(--red)}
+:focus-visible{outline:2px solid var(--red);outline-offset:2px}
+.num{direction:ltr;unicode-bidi:isolate;display:inline-block;font-variant-numeric:tabular-nums}
+.muted{color:var(--ink-3)} .small{font-size:13px} .nowrap{white-space:nowrap}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+
+/* shell */
+.app{display:flex;min-height:100%}
+.side{width:248px;flex:none;background:var(--side);color:var(--side-ink);display:flex;flex-direction:column;position:sticky;top:0;height:100vh;height:100dvh;overflow-y:auto}
+.brand{padding:22px 20px 18px;border-bottom:1px solid #1f1f1f}
+.brand b{display:block;font-family:var(--f-head);font-size:30px;letter-spacing:.5px;line-height:1;color:#fff}
+.brand b i{font-style:normal;color:var(--red)}
+.brand span{display:block;margin-top:6px;font-size:11.5px;color:var(--side-dim)}
+.nav{padding:10px;display:flex;flex-direction:column;gap:2px;flex:1}
+.nav a{display:flex;align-items:center;gap:11px;padding:10px 12px;border-radius:var(--r-sm);color:var(--side-dim);text-decoration:none;font-size:14.5px;border-inline-start:3px solid transparent}
+.nav a svg{width:19px;height:19px;flex:none}
+.nav a:hover{color:#fff;background:#141414}
+.nav a[aria-current=page]{color:#fff;background:#1a1a1a;border-inline-start-color:var(--red)}
+.nav .badge{margin-inline-start:auto;background:var(--red);color:#fff;border-radius:99px;font-size:11.5px;padding:0 7px;min-width:20px;text-align:center}
+.side-foot{padding:14px 16px;border-top:1px solid #1f1f1f;font-size:13px}
+.side-foot .who{color:#fff;font-weight:600}
+.side-foot button{margin-top:8px;background:none;border:1px solid #333;color:var(--side-ink);border-radius:var(--r-sm);padding:5px 12px;cursor:pointer;width:100%}
+.side-foot button:hover{border-color:var(--red)}
+.main{flex:1;min-width:0;display:flex;flex-direction:column}
+.demo-bar{background:var(--warn-soft);color:var(--warn);border-bottom:1px solid var(--line);padding:6px 20px;font-size:13px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.demo-bar b{font-weight:700}
+.topbar{display:none}
+.content{padding:24px 28px 60px;max-width:1500px;width:100%;margin:0 auto}
+.page-head{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:18px}
+.page-head p{margin:2px 0 0;color:var(--ink-3);font-size:13.5px}
+.actions{display:flex;gap:8px;flex-wrap:wrap}
+
+/* components */
+.card{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:18px}
+.card + .card{margin-top:16px}
+.card h2{margin-bottom:12px}
+.grid{display:grid;gap:14px}
+.g-kpi{grid-template-columns:repeat(auto-fill,minmax(210px,1fr))}
+.g-2{grid-template-columns:repeat(auto-fit,minmax(340px,1fr))}
+.kpi{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:14px 16px}
+.kpi .k{font-size:13px;color:var(--ink-2)}
+.kpi .v{font-family:var(--f-head);font-size:28px;font-weight:700;line-height:1.3;margin-top:2px}
+.kpi .d{font-size:12px;color:var(--ink-3);margin-top:2px}
+.kpi.alert .v{color:var(--red)}
+.btn{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line-2);background:var(--paper);color:var(--ink);padding:7px 15px;border-radius:var(--r-sm);cursor:pointer;text-decoration:none;font-size:14px;line-height:1.5}
+.btn:hover{border-color:var(--ink-2)}
+.btn.primary{background:var(--red);border-color:var(--red);color:var(--red-ink);font-weight:600}
+.btn.primary:hover{filter:brightness(.93)}
+.btn.dark{background:#000;border-color:#000;color:#fff}
+.btn.danger{color:var(--red);border-color:var(--red)}
+.btn.sm{padding:3px 10px;font-size:13px}
+.btn[disabled]{opacity:.55;cursor:not-allowed}
+.btn svg{width:16px;height:16px}
+.tag{display:inline-block;padding:1px 9px;border-radius:99px;font-size:12.5px;border:1px solid var(--line-2);background:var(--bg);white-space:nowrap}
+.tag.new{background:var(--info-soft);color:var(--info);border-color:transparent}
+.tag.contacted,.tag.interested{background:#eef0ff;color:#3b4aa8;border-color:transparent}
+.tag.follow_up{background:var(--warn-soft);color:var(--warn);border-color:transparent}
+.tag.registration_pending{background:#fbe9f3;color:#a3216a;border-color:transparent}
+.tag.converted,.tag.confirmed,.tag.paid{background:var(--ok-soft);color:var(--ok);border-color:transparent}
+.tag.lost,.tag.cancelled,.tag.overdue,.tag.refunded{background:var(--red-soft);color:var(--red);border-color:transparent}
+.tag.nurture,.tag.pending,.tag.partially_paid{background:var(--warn-soft);color:var(--warn);border-color:transparent}
+.tag.high{background:var(--ok-soft);color:var(--ok);border-color:transparent}
+.tag.low{background:var(--bg);color:var(--ink-3)}
+.tag.medium{background:var(--warn-soft);color:var(--warn);border-color:transparent}
+.alert-box{border-radius:var(--r-sm);padding:10px 14px;font-size:14px;border:1px solid}
+.alert-box.err{background:var(--red-soft);color:var(--red);border-color:var(--red)}
+.alert-box.warn{background:var(--warn-soft);color:var(--warn);border-color:transparent}
+.alert-box.info{background:var(--info-soft);color:var(--info);border-color:transparent}
+.alert-box.ok{background:var(--ok-soft);color:var(--ok);border-color:transparent}
+.empty{text-align:center;padding:38px 16px;color:var(--ink-3)}
+.empty h3{color:var(--ink);margin-bottom:6px}
+.empty .actions{justify-content:center;margin-top:14px}
+
+/* forms */
+.form-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px 14px}
+.fld{display:flex;flex-direction:column;gap:4px;min-width:0}
+.fld.full{grid-column:1/-1}
+.fld label{font-size:13px;color:var(--ink-2);font-weight:600}
+.fld label .req{color:var(--red)}
+input[type=text],input[type=search],input[type=tel],input[type=email],input[type=number],input[type=date],input[type=datetime-local],input[type=file],select,textarea{width:100%;border:1px solid var(--line-2);background:var(--paper);border-radius:var(--r-sm);padding:7px 10px;min-height:38px}
+input[type=tel],input[type=email],input[type=number],input[type=date],input[type=datetime-local]{direction:ltr;text-align:right}
+textarea{min-height:76px;resize:vertical}
+.fld .err{color:var(--red);font-size:12.5px;min-height:0}
+.fld.bad input,.fld.bad select,.fld.bad textarea{border-color:var(--red)}
+.hint{font-size:12.5px;color:var(--ink-3)}
+.form-foot{display:flex;gap:8px;justify-content:flex-start;margin-top:14px;align-items:center;flex-wrap:wrap}
+.form-err{margin-top:12px}
+.filters{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:14px}
+.filters.wide{grid-template-columns:2fr repeat(auto-fit,minmax(140px,1fr))}
+
+/* tables */
+.tbl-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:var(--r);background:var(--paper)}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th,td{padding:10px 12px;text-align:start;border-bottom:1px solid var(--line);vertical-align:middle}
+th{background:var(--bg);font-weight:600;font-size:13px;color:var(--ink-2);white-space:nowrap}
+th button{background:none;border:0;cursor:pointer;font-weight:600;font-size:13px;color:inherit;padding:0}
+tr:last-child td{border-bottom:0}
+tbody tr:hover{background:color-mix(in srgb,var(--bg) 60%,transparent)}
+td select{min-height:30px;padding:2px 6px;font-size:13px;width:auto}
+.cell-name b{display:block}
+.pager{display:flex;justify-content:space-between;align-items:center;margin-top:12px;gap:10px;flex-wrap:wrap}
+.over{color:var(--red);font-weight:600}
+
+/* bars */
+.bars{display:flex;flex-direction:column;gap:9px}
+.bar-row{display:grid;grid-template-columns:130px 1fr 74px;gap:10px;align-items:center;font-size:13.5px}
+.bar-track{height:12px;background:var(--bg);border-radius:99px;overflow:hidden}
+.bar-fill{height:100%;background:var(--red);border-radius:99px;min-width:2px}
+.bar-fill.k{background:var(--ink)}
+.bar-row .val{text-align:end}
+
+/* tabs */
+.tabs{display:flex;gap:2px;border-bottom:1px solid var(--line);margin-bottom:16px;overflow-x:auto}
+.tabs button{background:none;border:0;border-bottom:3px solid transparent;padding:9px 16px;cursor:pointer;color:var(--ink-3);font-weight:600;white-space:nowrap}
+.tabs button[aria-selected=true]{color:var(--ink);border-bottom-color:var(--red)}
+.tabs .cnt{font-size:12px;background:var(--bg);border-radius:99px;padding:0 7px;margin-inline-start:5px}
+
+/* lead header */
+.lead-head{display:flex;gap:16px;flex-wrap:wrap;align-items:flex-start;justify-content:space-between}
+.pills{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+.pill{background:var(--bg);border:1px solid var(--line);border-radius:var(--r-sm);padding:6px 12px;font-size:13px}
+.pill b{display:block;font-size:14.5px}
+.pill.hot{border-color:var(--red);background:var(--red-soft)}
+.timeline{list-style:none;margin:0;padding:0;position:relative}
+.timeline li{position:relative;padding:0 22px 18px 0;border-inline-start:0}
+.timeline li::before{content:"";position:absolute;right:5px;top:8px;bottom:-8px;width:2px;background:var(--line)}
+.timeline li:last-child::before{display:none}
+.timeline li::after{content:"";position:absolute;right:0;top:7px;width:12px;height:12px;border-radius:50%;background:var(--paper);border:3px solid var(--red)}
+.tl-head{display:flex;gap:8px;flex-wrap:wrap;align-items:center;font-size:13px;color:var(--ink-3)}
+.tl-body{margin-top:3px}
+.kv{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px 18px}
+.kv div span{display:block;font-size:12.5px;color:var(--ink-3)}
+.sec-tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+.sec-tabs button{border:1px solid var(--line-2);background:var(--paper);border-radius:99px;padding:5px 14px;cursor:pointer;font-size:13.5px}
+.sec-tabs button[aria-selected=true]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.sec-tabs button.hot[aria-selected=false]{border-color:var(--red);color:var(--red)}
+
+/* dialog + toast */
+dialog{border:0;border-radius:var(--r-lg);padding:0;background:var(--paper);color:var(--ink);width:min(720px,calc(100vw - 24px));max-height:92vh;box-shadow:0 20px 60px rgba(0,0,0,.35)}
+dialog.sm{width:min(440px,calc(100vw - 24px))}
+dialog::backdrop{background:rgba(0,0,0,.55)}
+.dlg-head{display:flex;justify-content:space-between;align-items:center;padding:14px 18px;border-bottom:1px solid var(--line)}
+.dlg-body{padding:18px;overflow-y:auto;max-height:calc(92vh - 62px)}
+.x{background:none;border:0;font-size:22px;line-height:1;cursor:pointer;color:var(--ink-3)}
+#toasts{position:fixed;inset-inline-end:16px;bottom:16px;display:flex;flex-direction:column;gap:8px;z-index:99;max-width:min(420px,calc(100vw - 32px))}
+.toast{background:#000;color:#fff;padding:10px 16px;border-radius:var(--r-sm);border-inline-start:4px solid var(--ok);font-size:14px;box-shadow:0 6px 24px rgba(0,0,0,.3)}
+.toast.err{border-inline-start-color:var(--red)}
+.loading{padding:50px;text-align:center;color:var(--ink-3)}
+.spin{display:inline-block;width:16px;height:16px;border:2px solid var(--line-2);border-top-color:var(--red);border-radius:50%;animation:sp .8s linear infinite;vertical-align:-3px;margin-inline-end:8px}
+@keyframes sp{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){.spin{animation-duration:2.4s}}
+
+/* login */
+.login{min-height:100vh;display:grid;grid-template-columns:1.1fr 1fr}
+.login-art{background:#000;color:#fff;padding:48px;display:flex;flex-direction:column;justify-content:space-between}
+.login-art .big{font-family:var(--f-head);font-size:clamp(64px,11vw,128px);font-weight:900;line-height:.95;letter-spacing:-1px}
+.login-art .big i{font-style:normal;color:var(--red)}
+.login-art p{max-width:380px;color:#bdbdbd}
+.login-form{padding:48px;display:flex;flex-direction:column;justify-content:center;gap:14px;max-width:520px}
+.acct{display:flex;justify-content:space-between;align-items:center;width:100%;text-align:start;padding:12px 14px;border:1px solid var(--line-2);border-radius:var(--r);background:var(--paper);cursor:pointer}
+.acct:hover:not([disabled]){border-color:var(--red)}
+.acct[disabled]{opacity:.5;cursor:not-allowed}
+.mob-only{display:none}
+
+@media (max-width:980px){
+  .side{position:fixed;inset-block:0;inset-inline-start:0;z-index:60;transform:translateX(100%);transition:transform .2s;width:270px}
+  .side.open{transform:none}
+  .scrim{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:55}
+  .topbar{display:flex;align-items:center;gap:12px;background:#000;color:#fff;padding:10px 14px;position:sticky;top:0;z-index:40}
+  .topbar b{font-family:var(--f-head);font-size:20px}.topbar b i{font-style:normal;color:var(--red)}
+  .topbar button{background:none;border:1px solid #333;color:#fff;border-radius:6px;padding:4px 10px;font-size:18px}
+  .content{padding:16px 14px 70px}
+  .login{grid-template-columns:1fr}.login-art{padding:28px;min-height:200px}.login-form{padding:24px;max-width:none}
+  .bar-row{grid-template-columns:96px 1fr 62px}
+  .mob-only{display:block}
+}
+@media (prefers-reduced-motion:reduce){.side{transition:none}}
+
+</style>
+</head>
+<body>
+<div id="root"></div>
+<div id="toasts" aria-live="polite"></div>
+<script>
+window.NOVA_CONFIG={"url": "https://kxqhgznunwfpxrggsflp.supabase.co", "key": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt4cWhnem51bndmcHhyZ2dzZmxwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE5ODY0NjMsImV4cCI6MjEwNzU2MjQ2M30.TU0j8t1fqf-T9MbjL_4LnjFuTXlpyh2NND7h_53IcG4"};
+/* NOVA Student CRM — core logic + simulated server (DEMO ADAPTER)
+ * Pure JS, no DOM. Runs in the browser (inlined into the app) and in Node (tests).
+ * The "server" below mimics the API contract that the Supabase backend (sql/) implements.
+ * It is NOT a real backend: data lives in this browser only. */
+(function (root) {
+'use strict';
+
+/* ───────────── Labels (Arabic) ───────────── */
+const L = {
+  lead_status: { new: 'جديد', contacted: 'تم التواصل', interested: 'مهتم', follow_up: 'قيد المتابعة', registration_pending: 'بانتظار التسجيل', converted: 'تم التسجيل', lost: 'خسارة', nurture: 'رعاية لاحقة' },
+  interest: { high: 'مرتفع', medium: 'متوسط', low: 'منخفض', unknown: 'غير محدد' },
+  mode: { online: 'أونلاين', in_person: 'حضوري', undecided: 'لم يُحدد' },
+  source: { meta_ads: 'إعلانات ميتا', tiktok: 'تيك توك', referral: 'ترشيح', organic: 'عضوي', whatsapp: 'واتساب', other: 'أخرى' },
+  interaction: { whatsapp: 'واتساب', phone_call: 'مكالمة هاتفية', other: 'أخرى' },
+  outcome: { no_answer: 'لم يرد', replied: 'رد على الرسالة', interested: 'مهتم', requested_time: 'طلب مهلة', objected_to_price: 'اعترض على السعر', requested_details: 'طلب تفاصيل', ready_to_register: 'جاهز للتسجيل', not_interested: 'غير مهتم', other: 'أخرى' },
+  price_obj: { none: 'لا يوجد اعتراض', too_expensive: 'السعر مرتفع', budget_unavailable: 'الميزانية غير متاحة', needs_installments: 'يحتاج تقسيط', needs_discount: 'يطلب خصمًا', unknown: 'غير محدد', other: 'أخرى' },
+  mode_obj: { prefers_in_person: 'يفضّل الحضوري', prefers_online: 'يفضّل الأونلاين', schedule_conflict: 'تعارض المواعيد', needs_more_information: 'يحتاج معلومات أكثر', unknown: 'غير محدد', other: 'أخرى' },
+  nonreg: { price: 'السعر', timing: 'التوقيت', learning_mode: 'نمط التعلم', needs_approval: 'يحتاج موافقة', low_interest: 'اهتمام ضعيف', no_response: 'لا يوجد رد', explicit_refusal: 'رفض صريح', chose_competitor: 'اختار منافسًا', postponed: 'قرار مؤجل', other: 'أخرى', unknown: 'غير محدد' },
+  payment: { unpaid: 'غير مدفوع', partially_paid: 'مدفوع جزئيًا', paid: 'مدفوع بالكامل', refunded: 'تم الاسترداد' },
+  reg: { pending: 'قيد التأكيد', confirmed: 'مؤكد', cancelled: 'ملغي' },
+  role: { manager: 'مدير', sales: 'مندوب مبيعات' }
+};
+const GOVERNORATES = ['القاهرة','الجيزة','الإسكندرية','القليوبية','الشرقية','الدقهلية','الغربية','المنوفية','البحيرة','كفر الشيخ','دمياط','بورسعيد','الإسماعيلية','السويس','شمال سيناء','جنوب سيناء','الفيوم','بني سويف','المنيا','أسيوط','سوهاج','قنا','الأقصر','أسوان','البحر الأحمر','الوادي الجديد','مطروح'];
+
+const ACTIVE_FOLLOW = ['new', 'contacted', 'interested', 'follow_up', 'registration_pending'];
+const TRANSITIONS = {
+  new: ['contacted', 'interested', 'follow_up', 'lost', 'nurture'],
+  contacted: ['interested', 'follow_up', 'registration_pending', 'lost', 'nurture'],
+  interested: ['contacted', 'follow_up', 'registration_pending', 'lost', 'nurture'],
+  follow_up: ['contacted', 'interested', 'registration_pending', 'lost', 'nurture'],
+  registration_pending: ['interested', 'follow_up', 'lost', 'nurture'],
+  converted: [],
+  lost: ['follow_up', 'nurture'],
+  nurture: ['contacted', 'interested', 'follow_up', 'lost']
+};
+const canTransition = (from, to) => from === to || (TRANSITIONS[from] || []).includes(to);
+
+/* ───────────── Helpers ───────────── */
+const uuid = () => (root.crypto && root.crypto.randomUUID) ? root.crypto.randomUUID()
+  : 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => { const r = Math.random() * 16 | 0; return (c === 'x' ? r : (r & 3 | 8)).toString(16); });
+const ERR = (code, message, extra) => Object.assign(new Error(message), { code, ar: message }, extra || {});
+const round2 = x => Math.round(Number(x) * 100) / 100;
+const pct = (a, b) => b > 0 ? Math.round((a / b) * 1000) / 10 : null;
+const median = arr => { if (!arr.length) return null; const s = arr.slice().sort((a, b) => a - b), m = s.length >> 1; return s.length % 2 ? s[m] : (s[m - 1] + s[m]) / 2; };
+const normText = s => String(s || '').toLowerCase().replace(/[\u064B-\u065F\u0670\u0640]/g, '').replace(/[أإآ]/g, 'ا').replace(/ى/g, 'ي').replace(/ة/g, 'ه').trim();
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+
+function normalizePhone(raw) {
+  if (raw == null) return { ok: false, reason: 'empty' };
+  let s = String(raw).trim();
+  const ar = '٠١٢٣٤٥٦٧٨٩', fa = '۰۱۲۳۴۵۶۷۸۹';
+  s = s.replace(/[٠-٩]/g, d => ar.indexOf(d)).replace(/[۰-۹]/g, d => fa.indexOf(d));
+  if (!s) return { ok: false, reason: 'empty' };
+  const plus = s.startsWith('+'), zeros = s.startsWith('00');
+  let d = s.replace(/\D/g, '');
+  if (!d) return { ok: false, reason: 'invalid' };
+  const eg = n => {
+    if (/^1[0125]\d{8}$/.test(n)) return { ok: true, normalized: '+20' + n, kind: 'eg_mobile' };
+    if (/^[2-9]\d{7,8}$/.test(n)) return { ok: true, normalized: '+20' + n, kind: 'eg_landline' };
+    return { ok: false, reason: 'invalid' };
+  };
+  if (plus || zeros) {
+    if (zeros) d = d.slice(2);
+    if (d.startsWith('20')) { let n = d.slice(2); if (n.startsWith('0')) n = n.slice(1); return eg(n); }
+    if (d.length >= 8 && d.length <= 15 && d[0] !== '0') return { ok: true, normalized: '+' + d, kind: 'intl' };
+    return { ok: false, reason: 'invalid' };
+  }
+  if (d.startsWith('20') && d.length === 12 && d[2] === '1') return eg(d.slice(2));
+  if (d.startsWith('0')) return eg(d.slice(1));
+  if (d.length === 10 && d[0] === '1') return eg(d);
+  return { ok: false, reason: 'invalid' };
+}
+function displayPhone(norm) {
+  if (!norm) return '';
+  if (/^\+201[0125]\d{8}$/.test(norm)) { const n = norm.slice(3); return '0' + n.slice(0, 2) + ' ' + n.slice(2, 6) + ' ' + n.slice(6); }
+  if (norm.startsWith('+20')) return '0' + norm.slice(3);
+  return norm;
+}
+
+/* Dates: inputs are ISO strings or "YYYY-MM-DDTHH:mm" (local). */
+function toISO(v) { if (v == null || v === '') return null; const d = new Date(v); return isNaN(d) ? undefined : d.toISOString(); }
+function dayStart(s) { const d = new Date(s + 'T00:00:00'); return isNaN(d) ? null : d; }
+function dayEnd(s) { const d = new Date(s + 'T23:59:59.999'); return isNaN(d) ? null : d; }
+function parseRange(from, to) {
+  let a = null, b = null;
+  if (from) { a = dayStart(from); if (!a) throw ERR('INVALID_RANGE', 'تاريخ البداية غير صالح'); }
+  if (to) { b = dayEnd(to); if (!b) throw ERR('INVALID_RANGE', 'تاريخ النهاية غير صالح'); }
+  if (a && b && a > b) throw ERR('INVALID_RANGE', 'نطاق التاريخ غير صحيح: تاريخ البداية بعد تاريخ النهاية');
+  return { a, b };
+}
+const inRange = (iso, r) => { if (!iso) return false; const t = new Date(iso).getTime(); return (!r.a || t >= r.a.getTime()) && (!r.b || t <= r.b.getTime()); };
+
+/* ───────────── CSV ───────────── */
+function parseCSV(text) {
+  text = String(text || '').replace(/^\uFEFF/, '');
+  const firstLine = text.split(/\r?\n/)[0] || '';
+  const cnt = c => (firstLine.match(new RegExp(c === '\t' ? '\t' : '\\' + c, 'g')) || []).length;
+  const delim = [',', ';', '\t'].map(c => [c, cnt(c)]).sort((x, y) => y[1] - x[1])[0][0];
+  const rows = []; let row = [], f = '', q = false;
+  for (let i = 0; i < text.length; i++) {
+    const c = text[i];
+    if (q) {
+      if (c === '"') { if (text[i + 1] === '"') { f += '"'; i++; } else q = false; } else f += c;
+    } else if (c === '"') q = true;
+    else if (c === delim) { row.push(f); f = ''; }
+    else if (c === '\n' || c === '\r') { if (c === '\r' && text[i + 1] === '\n') i++; row.push(f); f = ''; rows.push(row); row = []; }
+    else f += c;
+  }
+  if (f !== '' || row.length) { row.push(f); rows.push(row); }
+  return rows.filter(r => r.some(x => String(x).trim() !== ''));
+}
+function csvCell(v) {
+  let s = v == null ? '' : String(v);
+  if (/^[=@\t\r]/.test(s) || (/^[+-]/.test(s) && !/^[+-][\d\s]+$/.test(s))) s = "'" + s; // spreadsheet formula-injection guard
+  return /[",\n\r]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s;
+}
+const toCSV = (header, rows) => '\uFEFF' + [header].concat(rows).map(r => r.map(csvCell).join(',')).join('\r\n');
+
+/* ───────────── Money ───────────── */
+function enrollmentCalc(price, discount, paid) {
+  const net = round2(price - discount), remaining = round2(net - paid);
+  return { net, remaining };
+}
+function derivePayment(net, paid, current) {
+  if (current === 'refunded') return 'refunded';
+  if (paid <= 0) return 'unpaid';
+  return paid >= net ? 'paid' : 'partially_paid';
+}
+
+/* ───────────── Reports ───────────── */
+function computeReports(state, user, f, now) {
+  const r = parseRange(f.from, f.to);
+  const hasRange = !!(r.a || r.b);
+  let leads = state.leads.filter(l => !l.archived_at && (user.role === 'manager' || l.assigned_to === user.id));
+  if (user.role === 'manager' && f.assigned_to) leads = leads.filter(l => l.assigned_to === f.assigned_to);
+  const ids = new Set(leads.map(l => l.id));
+  const cohort = hasRange ? leads.filter(l => inRange(l.created_at, r)) : leads;
+  const confirmedBy = new Set(state.enrollments.filter(e => e.registration_status === 'confirmed' && ids.has(e.lead_id)).map(e => e.lead_id));
+  const conv = l => confirmedBy.has(l.id);
+  const contacted = cohort.filter(l => l.first_contact_at).length;
+  const converted = cohort.filter(conv).length;
+  const nowT = now.getTime();
+  const overdueLead = l => l.next_follow_up_at && new Date(l.next_follow_up_at).getTime() < nowT && !['converted', 'lost'].includes(l.lead_status);
+
+  const group = (keyFn, labelFn, keys) => keys.map(k => {
+    const ls = cohort.filter(l => keyFn(l) === k), c = ls.filter(conv).length;
+    return { key: k, label: labelFn(k), leads: ls.length, converted: c, rate: pct(c, ls.length) };
+  });
+  const by_source = group(l => l.lead_source, k => L.source[k], Object.keys(L.source)).filter(x => x.leads > 0);
+
+  // follow-up completion (tasks derived from logged follow-up records that scheduled a next date)
+  const fuByLead = {};
+  state.follow_ups.filter(x => ids.has(x.lead_id)).forEach(x => (fuByLead[x.lead_id] = fuByLead[x.lead_id] || []).push(x));
+  let due = 0, done = 0;
+  Object.values(fuByLead).forEach(arr => {
+    arr.sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
+    arr.forEach((x, i) => {
+      if (!x.next_follow_up_at) return;
+      const t = new Date(x.next_follow_up_at).getTime();
+      if (t > nowT) return;
+      if (hasRange && !inRange(x.next_follow_up_at, r)) return;
+      due++; if (arr[i + 1]) done++;
+    });
+  });
+
+  // reps
+  const repIds = user.role === 'manager'
+    ? state.profiles.filter(p => p.role === 'sales' || leads.some(l => l.assigned_to === p.id)).map(p => p.id)
+    : [user.id];
+  const by_rep = repIds.map(id => {
+    const p = state.profiles.find(x => x.id === id);
+    const mine = cohort.filter(l => l.assigned_to === id);
+    const mineAll = leads.filter(l => l.assigned_to === id);
+    const hrs = mine.filter(l => l.first_contact_at).map(l => (new Date(l.first_contact_at) - new Date(l.created_at)) / 36e5).filter(h => h >= 0);
+    const completed = state.follow_ups.filter(x => x.created_by === id && ids.has(x.lead_id) && (!hasRange || inRange(x.interaction_at, r))).length;
+    const c = mine.filter(conv).length;
+    return {
+      user_id: id, name: p ? p.full_name : '—', active: p ? p.is_active : false,
+      assigned: mine.length, contacted: mine.filter(l => l.first_contact_at).length, converted: c, rate: pct(c, mine.length),
+      overdue: mineAll.filter(overdueLead).length, completed_followups: completed,
+      median_first_contact_hours: hrs.length >= 5 ? Math.round(median(hrs) * 10) / 10 : null, median_n: hrs.length
+    };
+  });
+
+  // non-registration reasons: latest feedback record per non-converted cohort lead
+  const latestFb = {};
+  state.feedback.filter(x => ids.has(x.lead_id)).forEach(x => { const c = latestFb[x.lead_id]; if (!c || new Date(x.recorded_at) > new Date(c.recorded_at)) latestFb[x.lead_id] = x; });
+  const eligible = cohort.filter(l => !conv(l));
+  const reasons = {}; let noFeedback = 0;
+  eligible.forEach(l => { const fb = latestFb[l.id]; if (!fb) { noFeedback++; return; } reasons[fb.non_registration_reason] = (reasons[fb.non_registration_reason] || 0) + 1; });
+
+  const regsInPeriod = state.enrollments.filter(e => e.registration_status === 'confirmed' && ids.has(e.lead_id) && (!hasRange || inRange(e.registration_date + 'T12:00:00', r))).length;
+  return {
+    generated_at: now.toISOString(), period: { from: f.from || null, to: f.to || null, all_time: !hasRange },
+    scope: user.role === 'manager' ? (f.assigned_to ? 'rep' : 'all') : 'own',
+    empty: leads.length === 0,
+    total_leads: leads.length, new_leads: cohort.length, contacted, contact_rate: pct(contacted, cohort.length),
+    confirmed_cohort: converted, conversion_rate: pct(converted, cohort.length), registrations_in_period: regsInPeriod,
+    overdue_followups: leads.filter(overdueLead).length,
+    followup_completion: { due, completed: done, rate: pct(done, due) },
+    by_source, by_rep,
+    non_registration: { eligible: eligible.length, no_feedback: noFeedback, reasons },
+    definitions: [
+      'العملاء الجدد = العملاء الذين تاريخ إضافتهم داخل الفترة المحددة (الدفعة/cohort). عند اختيار «كل الفترات» تشمل الدفعة جميع العملاء.',
+      'تم التواصل = عميل سُجّل له تواصل فعلي واحد على الأقل بنتيجة غير «لم يرد» (حقل أول تواصل).',
+      'معدل التواصل = العملاء الذين تم التواصل معهم ÷ عملاء الدفعة × 100.',
+      'التسجيل المؤكد = اشتراك حالته «مؤكد». يُعد العميل «تم التسجيل» فقط بوجود اشتراك مؤكد واحد على الأقل، ولا يُحدَّد يدويًا.',
+      'معدل التحويل = عملاء الدفعة الذين لديهم تسجيل مؤكد ÷ عملاء الدفعة نفسها × 100 (عميل واحد يُحسب مرة واحدة).',
+      '«تسجيلات مؤكدة خلال الفترة» = اشتراكات مؤكدة تاريخ تسجيلها داخل الفترة من أي دفعة — لا تُستخدم في معدل التحويل.',
+      'المتابعة المتأخرة = موعد المتابعة التالي أقدم من الوقت الحالي ولم تُسجَّل بعده متابعة، وحالة العميل ليست «تم التسجيل» أو «خسارة».',
+      'نسبة إنجاز المتابعات = مواعيد متابعة حُددت ضمن سجلات المتابعة وحان وقتها، وسُجّلت بعدها متابعة أخرى للعميل ÷ جميع المواعيد التي حان وقتها. المواعيد المضبوطة يدويًا دون تسجيل متابعة لا تدخل في الحساب.',
+      'وقت أول تواصل (الوسيط) = الوقت بين إضافة العميل وأول تواصل فعلي، ويظهر فقط عند وجود 5 حالات على الأقل.',
+      'أسباب عدم التسجيل = آخر رأي مسجل لكل عميل غير مسجّل في الدفعة. العملاء بلا رأي مسجل يُعرضون منفصلين ولا يُعتبرون سببًا.'
+    ],
+    notes: [
+      'الإسناد: يُنسب العميل إلى المندوب المسؤول عنه حاليًا، وإلى المصدر والحملة المسجلين في ملفه.',
+      'مستثنى من كل التقارير: العملاء المؤرشفون.',
+      'لا تُعرض تكلفة الاكتساب أو العائد على الإنفاق لأنه لم يتم إدخال أو ربط بيانات إنفاق إعلاني فعلية.'
+    ]
+  };
+}
+
+/* ───────────── Server (demo adapter) ───────────── */
+function freshState() {
+  const p = (id, name, email, role, active) => ({ id, full_name: name, email, role, is_active: active, created_at: new Date().toISOString(), updated_at: new Date().toISOString() });
+  return {
+    v: 1,
+    profiles: [
+      p('u-manager', 'منى السيد', 'mona@nova.test', 'manager', true),
+      p('u-sales-1', 'أحمد حسن', 'ahmed@nova.test', 'sales', true),
+      p('u-sales-2', 'سارة علي', 'sara@nova.test', 'sales', true),
+      p('u-sales-3', 'كريم محمود', 'karim@nova.test', 'sales', true),
+      p('u-sales-4', 'هدى فتحي', 'hoda@nova.test', 'sales', false)
+    ],
+    leads: [], follow_ups: [], feedback: [], enrollments: [], audit_logs: [],
+    settings: {
+      courses: [{ name: 'التسويق الرقمي', price: 0 }, { name: 'إعلانات ميتا', price: 0 }, { name: 'صناعة المحتوى', price: 0 }, { name: 'تيك توك للأعمال', price: 0 }],
+      sales_can_register: true, sales_can_confirm: false, require_deposit: true
+    },
+    sessions: {}, requests: {}
+  };
+}
+
+function createServer(opts) {
+  opts = opts || {};
+  const clock = opts.clock || (() => new Date());
+  const persist = opts.persist || (() => {});
+  let state = opts.state || freshState();
+  const iso = () => clock().toISOString();
+  const PUBLIC = new Set(['listLoginProfiles', 'login']);
+  const isMgr = u => u.role === 'manager';
+  const sees = (u, l) => isMgr(u) || l.assigned_to === u.id;
+  const NF = () => ERR('NOT_FOUND', 'السجل غير موجود أو غير متاح لك');
+  const NO = m => ERR('FORBIDDEN', m || 'غير مصرح لك بتنفيذ هذا الإجراء');
+  const nameOf = id => { const p = state.profiles.find(x => x.id === id); return p ? p.full_name : '—'; };
+  const enumOk = (map, v) => Object.prototype.hasOwnProperty.call(map, v);
+  const failFields = f => { if (Object.keys(f).length) throw ERR('VALIDATION', 'يرجى تصحيح الحقول المحددة', { fields: f }); };
+
+  function audit(actor, entity_type, entity_id, action, summary, related_lead_id) {
+    state.audit_logs.push({ id: uuid(), actor_user_id: actor, entity_type, entity_id: entity_id || null, action, timestamp: iso(), safe_change_summary: summary, related_lead_id: related_lead_id || null });
+  }
+  function getLeadFor(u, id, { write = false } = {}) {
+    const l = state.leads.find(x => x.id === id);
+    if (!l || !sees(u, l)) throw NF();
+    if (write && l.archived_at) throw ERR('ARCHIVED', 'العميل مؤرشف. استعده أولًا لتعديله');
+    return l;
+  }
+  function idem(ctx, args, fn) {
+    const k = args.request_id;
+    if (k && state.requests[k]) return state.requests[k];
+    const res = fn();
+    if (k) {
+      state.requests[k] = res;
+      const keys = Object.keys(state.requests); if (keys.length > 500) delete state.requests[keys[0]];
+    }
+    return res;
+  }
+  const leadView = l => Object.assign({}, l, { assigned_to_name: nameOf(l.assigned_to), created_by_name: nameOf(l.created_by) });
+  const enrView = e => { const c = enrollmentCalc(e.course_price, e.discount_amount, e.amount_paid); return Object.assign({}, e, { net_amount: c.net, remaining_amount: c.remaining }); };
+  const isOverdue = l => l.next_follow_up_at && new Date(l.next_follow_up_at) < clock() && !['converted', 'lost'].includes(l.lead_status);
+
+  function findDup(norm, exceptId) { return state.leads.filter(l => l.normalized_phone === norm && l.id !== exceptId); }
+
+  function validateLeadFields(d, { partial = false } = {}) {
+    const f = {}, out = {};
+    const has = k => !partial || d[k] !== undefined;
+    if (has('full_name')) { const v = String(d.full_name || '').trim(); if (v.length < 2) f.full_name = 'الاسم مطلوب (حرفان على الأقل)'; else if (v.length > 120) f.full_name = 'الاسم طويل جدًا'; else out.full_name = v; }
+    if (has('phone')) {
+      const n = normalizePhone(d.phone);
+      if (!n.ok) f.phone = n.reason === 'empty' ? 'رقم الهاتف مطلوب' : 'رقم الهاتف غير صالح. استخدم رقمًا مصريًا مثل 01012345678 أو أضف رمز الدولة بـ + للأرقام الدولية';
+      else { out.phone = String(d.phone).trim(); out.normalized_phone = n.normalized; }
+    }
+    if (d.email !== undefined) { const v = String(d.email || '').trim(); if (v && !EMAIL_RE.test(v)) f.email = 'البريد الإلكتروني غير صالح'; else out.email = v || null; }
+    ['governorate', 'campaign_name', 'ad_name'].forEach(k => { if (d[k] !== undefined) { const v = String(d[k] || '').trim(); if (v.length > 120) f[k] = 'النص طويل جدًا'; else out[k] = v || null; } });
+    if (d.general_notes !== undefined) { const v = String(d.general_notes || '').trim(); if (v.length > 2000) f.general_notes = 'الملاحظات طويلة جدًا (الحد 2000 حرف)'; else out.general_notes = v || null; }
+    if (d.preferred_learning_mode !== undefined) { if (!enumOk(L.mode, d.preferred_learning_mode)) f.preferred_learning_mode = 'قيمة غير صالحة'; else out.preferred_learning_mode = d.preferred_learning_mode; }
+    if (d.lead_source !== undefined) { if (!enumOk(L.source, d.lead_source)) f.lead_source = 'مصدر غير صالح'; else out.lead_source = d.lead_source; }
+    if (d.interest_level !== undefined) { if (!enumOk(L.interest, d.interest_level)) f.interest_level = 'قيمة غير صالحة'; else out.interest_level = d.interest_level; }
+    if (d.course_interest !== undefined) {
+      const v = String(d.course_interest || '').trim();
+      if (v && !state.settings.courses.some(c => c.name === v)) f.course_interest = 'الدورة غير معرفة في الإعدادات';
+      else out.course_interest = v || null;
+    }
+    if (d.next_follow_up_at !== undefined) { const t = toISO(d.next_follow_up_at); if (t === undefined) f.next_follow_up_at = 'تاريخ المتابعة غير صالح'; else out.next_follow_up_at = t; }
+    return { f, out };
+  }
+
+  const api = {
+    /* ── auth ── */
+    listLoginProfiles() { return state.profiles.map(p => ({ id: p.id, full_name: p.full_name, role: p.role, is_active: p.is_active })); },
+    login(ctx, a) {
+      const p = state.profiles.find(x => x.id === a.profile_id);
+      if (!p) throw ERR('AUTH', 'الحساب غير موجود');
+      if (!p.is_active) throw ERR('INACTIVE', 'هذا الحساب غير نشط. تواصل مع المدير لتفعيله');
+      const token = uuid(); state.sessions[token] = { user_id: p.id, created_at: iso() };
+      return { token, user: { id: p.id, full_name: p.full_name, email: p.email, role: p.role } };
+    },
+    logout(ctx, a, token) { delete state.sessions[token]; return { ok: true }; },
+    me(ctx) { const u = ctx.user; return { id: u.id, full_name: u.full_name, email: u.email, role: u.role }; },
+    bootstrap(ctx) {
+      const u = ctx.user;
+      return { me: api.me(ctx), directory: api.listUsers(ctx), settings: api.getSettings(ctx) };
+    },
+
+    /* ── users ── */
+    listUsers(ctx) {
+      const u = ctx.user;
+      const rows = isMgr(u) ? state.profiles : state.profiles.filter(p => p.id === u.id);
+      return rows.map(p => ({ id: p.id, full_name: p.full_name, email: p.email, role: p.role, is_active: p.is_active, created_at: p.created_at,
+        assigned_count: state.leads.filter(l => l.assigned_to === p.id && !l.archived_at && l.lead_status !== 'converted').length }));
+    },
+    createUser(ctx, a) {
+      const u = ctx.user; if (!isMgr(u)) throw NO();
+      const f = {}; const name = String(a.full_name || '').trim(), email = String(a.email || '').trim().toLowerCase();
+      if (name.length < 2) f.full_name = 'الاسم مطلوب';
+      if (!EMAIL_RE.test(email)) f.email = 'بريد إلكتروني غير صالح'; else if (state.profiles.some(p => p.email === email)) f.email = 'البريد مستخدم من قبل';
+      if (!enumOk(L.role, a.role)) f.role = 'دور غير صالح';
+      failFields(f);
+      const p = { id: uuid(), full_name: name, email, role: a.role, is_active: true, created_at: iso(), updated_at: iso() };
+      state.profiles.push(p); audit(u.id, 'user', p.id, 'user.created', `إنشاء مستخدم بدور: ${L.role[p.role]}`);
+      return p;
+    },
+    updateUser(ctx, a) {
+      const u = ctx.user; if (!isMgr(u)) throw NO('إدارة المستخدمين والأدوار للمدير فقط');
+      const p = state.profiles.find(x => x.id === a.id); if (!p) throw NF();
+      const patch = a.patch || {};
+      const bad = Object.keys(patch).filter(k => !['full_name', 'role', 'is_active', 'reassign_to'].includes(k));
+      if (bad.length) throw ERR('FORBIDDEN_FIELD', 'حقول غير مسموح بتعديلها: ' + bad.join('، '));
+      if (p.id === u.id && ((patch.role && patch.role !== p.role) || patch.is_active === false)) throw ERR('SELF_LOCKOUT', 'لا يمكنك تغيير دورك أو تعطيل حسابك بنفسك');
+      if (patch.role !== undefined && !enumOk(L.role, patch.role)) throw ERR('VALIDATION', 'دور غير صالح', { fields: { role: 'دور غير صالح' } });
+      if (patch.full_name !== undefined) { const n = String(patch.full_name).trim(); if (n.length < 2) throw ERR('VALIDATION', 'الاسم مطلوب', { fields: { full_name: 'الاسم مطلوب' } }); p.full_name = n; }
+      if (patch.is_active === false && p.is_active) {
+        const open = state.leads.filter(l => l.assigned_to === p.id && !l.archived_at && !['converted', 'lost'].includes(l.lead_status));
+        if (open.length) {
+          const t = state.profiles.find(x => x.id === patch.reassign_to);
+          if (!t || !t.is_active || t.id === p.id) throw ERR('REASSIGN_REQUIRED', `لدى المستخدم ${open.length} عميل نشط. اختر مستخدمًا نشطًا لنقلهم إليه قبل التعطيل`, { count: open.length });
+          open.forEach(l => { l.assigned_to = t.id; l.version++; l.updated_at = iso(); audit(u.id, 'lead', l.id, 'lead.assigned', `إعادة إسناد عند تعطيل مستخدم: من ${p.full_name} إلى ${t.full_name}`, l.id); });
+        }
+        p.is_active = false; Object.keys(state.sessions).forEach(t => { if (state.sessions[t].user_id === p.id) delete state.sessions[t]; });
+        audit(u.id, 'user', p.id, 'user.deactivated', 'تعطيل حساب مستخدم');
+      } else if (patch.is_active === true && !p.is_active) { p.is_active = true; audit(u.id, 'user', p.id, 'user.activated', 'تفعيل حساب مستخدم'); }
+      if (patch.role && patch.role !== p.role) { audit(u.id, 'user', p.id, 'user.role_changed', `تغيير الدور من ${L.role[p.role]} إلى ${L.role[patch.role]}`); p.role = patch.role; }
+      p.updated_at = iso(); return p;
+    },
+
+    /* ── settings ── */
+    getSettings(ctx) { return state.settings; },
+    updateSettings(ctx, a) {
+      const u = ctx.user; if (!isMgr(u)) throw NO('تعديل الإعدادات للمدير فقط');
+      const s = a.settings || {}, f = {};
+      if (s.courses !== undefined) {
+        if (!Array.isArray(s.courses)) f.courses = 'قائمة الدورات غير صالحة';
+        else {
+          const seen = new Set();
+          for (const c of s.courses) {
+            const n = String(c.name || '').trim(); const pr = Number(c.price);
+            if (!n) { f.courses = 'اسم الدورة مطلوب'; break; }
+            if (seen.has(n)) { f.courses = 'اسم دورة مكرر: ' + n; break; }
+            if (!isFinite(pr) || pr < 0) { f.courses = 'سعر الدورة يجب ألا يكون سالبًا'; break; }
+            seen.add(n);
+          }
+        }
+      }
+      failFields(f);
+      if (s.courses !== undefined) state.settings.courses = s.courses.map(c => ({ name: String(c.name).trim(), price: round2(c.price) }));
+      ['sales_can_register', 'sales_can_confirm', 'require_deposit'].forEach(k => { if (typeof s[k] === 'boolean') state.settings[k] = s[k]; });
+      audit(u.id, 'settings', null, 'settings.updated', 'تعديل إعدادات النظام');
+      return state.settings;
+    },
+
+    /* ── leads ── */
+    listLeads(ctx, a) {
+      const u = ctx.user; a = a || {};
+      const r = parseRange(a.from, a.to);
+      let rows = state.leads.filter(l => sees(u, l));
+      if (!(a.include_archived && isMgr(u))) rows = rows.filter(l => !l.archived_at);
+      else if (a.only_archived) rows = rows.filter(l => l.archived_at);
+      if (a.q) {
+        const q = normText(a.q), digits = String(a.q).replace(/\D/g, ''), np = normalizePhone(a.q);
+        rows = rows.filter(l => normText(l.full_name).includes(q) || (digits.length >= 3 && (String(l.phone).replace(/\D/g, '').includes(digits) || l.normalized_phone.replace(/\D/g, '').includes(digits))) || (np.ok && l.normalized_phone === np.normalized));
+      }
+      if (a.status) rows = rows.filter(l => l.lead_status === a.status);
+      if (a.interest) rows = rows.filter(l => l.interest_level === a.interest);
+      if (a.course) rows = rows.filter(l => l.course_interest === a.course);
+      if (a.source) rows = rows.filter(l => l.lead_source === a.source);
+      if (a.assigned_to && isMgr(u)) rows = rows.filter(l => l.assigned_to === a.assigned_to);
+      if (r.a || r.b) rows = rows.filter(l => inRange(l.created_at, r));
+      if (a.overdue) rows = rows.filter(isOverdue);
+      const dir = a.dir === 'asc' ? 1 : -1, key = ['created_at', 'full_name', 'next_follow_up_at', 'last_contact_at', 'lead_status', 'interest_level'].includes(a.sort) ? a.sort : 'created_at';
+      rows = rows.slice().sort((x, y) => {
+        const vx = x[key], vy = y[key];
+        if (vx == null && vy == null) return 0; if (vx == null) return 1; if (vy == null) return -1; // nulls last
+        return (vx > vy ? 1 : vx < vy ? -1 : 0) * dir;
+      });
+      const pageSize = Math.min(Math.max(+a.page_size || 20, 5), 200), total = rows.length, page = Math.max(+a.page || 1, 1);
+      return { rows: rows.slice((page - 1) * pageSize, page * pageSize).map(l => Object.assign(leadView(l), { is_overdue: !!isOverdue(l) })), total, page, page_size: pageSize };
+    },
+    getLead(ctx, a) {
+      const u = ctx.user, l = getLeadFor(u, a.id);
+      const byDesc = (arr, k) => arr.slice().sort((x, y) => new Date(y[k]) - new Date(x[k]));
+      return {
+        lead: Object.assign(leadView(l), { is_overdue: !!isOverdue(l) }),
+        follow_ups: byDesc(state.follow_ups.filter(x => x.lead_id === l.id), 'interaction_at').map(x => Object.assign({}, x, { created_by_name: nameOf(x.created_by) })),
+        feedback: byDesc(state.feedback.filter(x => x.lead_id === l.id), 'recorded_at').map(x => Object.assign({}, x, { recorded_by_name: nameOf(x.recorded_by) })),
+        enrollments: state.enrollments.filter(x => x.lead_id === l.id).map(enrView),
+        audit: isMgr(u) ? byDesc(state.audit_logs.filter(x => x.related_lead_id === l.id), 'timestamp').map(x => Object.assign({}, x, { actor_name: nameOf(x.actor_user_id) })) : null
+      };
+    },
+    createLead(ctx, a) {
+      const u = ctx.user;
+      return idem(ctx, a, () => {
+        const data = a.data || {};
+        const { f, out } = validateLeadFields(Object.assign({ lead_source: 'other', preferred_learning_mode: 'undecided', interest_level: 'unknown' }, data));
+        let assignee = u.id;
+        if (isMgr(u) && data.assigned_to) { const t = state.profiles.find(p => p.id === data.assigned_to); if (!t || !t.is_active) f.assigned_to = 'يجب الإسناد إلى مستخدم نشط'; else assignee = t.id; }
+        if (!isMgr(u) && data.assigned_to && data.assigned_to !== u.id) throw NO('لا يمكنك إسناد العملاء لغيرك');
+        failFields(f);
+        const dups = findDup(out.normalized_phone);
+        let note = null;
+        if (dups.length) {
+          if (!isMgr(u)) throw ERR('DUPLICATE_BLOCKED', 'هذا الرقم مسجل بالفعل في النظام. لا يمكن إضافته مرة أخرى؛ تواصل مع المدير لحل التعارض', { duplicates: [], hidden: true });
+          if (!a.allow_duplicate) throw ERR('DUPLICATE', 'هذا الرقم مسجل بالفعل. راجع السجلات المطابقة قبل المتابعة', { duplicates: dups.map(d => ({ id: d.id, full_name: d.full_name, assigned_to_name: nameOf(d.assigned_to), lead_status: d.lead_status, archived: !!d.archived_at })) });
+          note = String(a.duplicate_reason || '').trim();
+          if (note.length < 3) throw ERR('VALIDATION', 'اذكر سبب إضافة الرقم المكرر', { fields: { duplicate_reason: 'سبب التجاوز مطلوب' } });
+        }
+        const t = iso();
+        const lead = Object.assign({
+          id: uuid(), full_name: null, phone: null, normalized_phone: null, email: null, governorate: null, preferred_learning_mode: 'undecided', course_interest: null,
+          lead_source: 'other', campaign_name: null, ad_name: null, lead_status: 'new', interest_level: 'unknown', assigned_to: assignee,
+          first_contact_at: null, next_follow_up_at: null, last_contact_at: null, lost_reason: null, general_notes: null,
+          duplicate_resolution_note: note, created_by: u.id, created_at: t, updated_at: t, archived_at: null, version: 1
+        }, out);
+        state.leads.push(lead);
+        audit(u.id, 'lead', lead.id, 'lead.created', 'إنشاء عميل' + (note ? ' (تجاوز تحذير رقم مكرر بقرار المدير)' : ''), lead.id);
+        return leadView(lead);
+      });
+    },
+    updateLead(ctx, a) {
+      const u = ctx.user, l = getLeadFor(u, a.id, { write: true }), patch = a.patch || {};
+      const allowed = ['full_name', 'phone', 'email', 'governorate', 'preferred_learning_mode', 'course_interest', 'lead_source', 'campaign_name', 'ad_name', 'interest_level', 'next_follow_up_at', 'general_notes', 'lead_status', 'lost_reason'];
+      const bad = Object.keys(patch).filter(k => !allowed.includes(k));
+      if (bad.length) throw ERR('FORBIDDEN_FIELD', 'لا يمكن تعديل الحقول: ' + bad.join('، ') + (bad.includes('assigned_to') ? ' (الإسناد للمدير فقط عبر إجراء الإسناد)' : ''));
+      if (a.expected_version !== undefined && a.expected_version !== l.version) throw ERR('CONFLICT', 'تم تعديل هذا العميل من مستخدم آخر أثناء عملك. أعد تحميل البيانات ثم كرر التعديل', { current_version: l.version });
+      const { f, out } = validateLeadFields(patch, { partial: true });
+      const d = Object.assign({}, out);
+      if (out.normalized_phone && out.normalized_phone !== l.normalized_phone) {
+        if (findDup(out.normalized_phone, l.id).length) f.phone = isMgr(u) ? 'هذا الرقم مسجل لعميل آخر' : 'هذا الرقم مسجل لعميل آخر. تواصل مع المدير';
+      }
+      let statusChange = null;
+      if (patch.lead_status !== undefined && patch.lead_status !== l.lead_status) {
+        if (!enumOk(L.lead_status, patch.lead_status)) f.lead_status = 'حالة غير صالحة';
+        else if (patch.lead_status === 'converted') f.lead_status = 'لا يمكن تحديد العميل «تم التسجيل» يدويًا. تتحول الحالة تلقائيًا عند تأكيد اشتراك';
+        else if (l.lead_status === 'converted') f.lead_status = 'حالة «تم التسجيل» مرتبطة باشتراك مؤكد. عدّل الاشتراك أو ألغه لتغييرها';
+        else if (!canTransition(l.lead_status, patch.lead_status)) f.lead_status = `لا يمكن الانتقال من «${L.lead_status[l.lead_status]}» إلى «${L.lead_status[patch.lead_status]}»`;
+        else {
+          statusChange = patch.lead_status;
+          if (statusChange === 'lost') { const lr = String(patch.lost_reason !== undefined ? patch.lost_reason : l.lost_reason || '').trim(); if (lr.length < 2) f.lost_reason = 'سبب الخسارة مطلوب'; else d.lost_reason = lr; }
+        }
+      }
+      failFields(f);
+      delete d.lead_status;
+      if (statusChange) { d.lead_status = statusChange; if (statusChange !== 'lost' && l.lead_status === 'lost') d.lost_reason = null; }
+      else if (patch.lost_reason !== undefined && l.lead_status === 'lost') d.lost_reason = String(patch.lost_reason || '').trim() || l.lost_reason;
+      const changed = Object.keys(d).filter(k => JSON.stringify(d[k]) !== JSON.stringify(l[k]) && k !== 'normalized_phone');
+      if (!changed.length && !(d.normalized_phone && d.normalized_phone !== l.normalized_phone)) return leadView(l);
+      const FL = { full_name: 'الاسم', phone: 'الهاتف', email: 'البريد', governorate: 'المحافظة', preferred_learning_mode: 'نمط التعلم', course_interest: 'الدورة', lead_source: 'المصدر', campaign_name: 'الحملة', ad_name: 'الإعلان', interest_level: 'مستوى الاهتمام', next_follow_up_at: 'موعد المتابعة', general_notes: 'الملاحظات', lead_status: 'الحالة', lost_reason: 'سبب الخسارة' };
+      const prev = l.lead_status;
+      Object.assign(l, d); l.version++; l.updated_at = iso();
+      if (statusChange) audit(u.id, 'lead', l.id, 'lead.status_changed', `الحالة: ${L.lead_status[prev]} ← ${L.lead_status[statusChange]}`, l.id);
+      const other = changed.filter(k => !['lead_status'].includes(k)).map(k => FL[k] || k);
+      if (other.length) audit(u.id, 'lead', l.id, 'lead.updated', 'تعديل: ' + other.join('، '), l.id);
+      return leadView(l);
+    },
+    assignLead(ctx, a) {
+      const u = ctx.user; if (!isMgr(u)) throw NO('إسناد العملاء وإعادة إسنادهم للمدير فقط');
+      const l = getLeadFor(u, a.id, { write: true });
+      const t = state.profiles.find(p => p.id === a.assigned_to);
+      if (!t) throw ERR('VALIDATION', 'المستخدم غير موجود', { fields: { assigned_to: 'مستخدم غير موجود' } });
+      if (!t.is_active) throw ERR('VALIDATION', 'لا يمكن الإسناد إلى حساب غير نشط', { fields: { assigned_to: 'حساب غير نشط' } });
+      if (a.expected_version !== undefined && a.expected_version !== l.version) throw ERR('CONFLICT', 'تم تعديل هذا العميل من مستخدم آخر. أعد التحميل ثم حاول مجددًا', { current_version: l.version });
+      if (t.id === l.assigned_to) throw ERR('NO_CHANGE', 'العميل مسند لهذا المستخدم بالفعل');
+      const from = nameOf(l.assigned_to); l.assigned_to = t.id; l.version++; l.updated_at = iso();
+      audit(u.id, 'lead', l.id, 'lead.assigned', `إعادة إسناد: من ${from} إلى ${t.full_name}`, l.id);
+      return leadView(l);
+    },
+    archiveLead(ctx, a) {
+      const u = ctx.user; if (!isMgr(u)) throw NO('الأرشفة للمدير فقط');
+      const l = getLeadFor(u, a.id);
+      if (a.restore) { if (!l.archived_at) throw ERR('NO_CHANGE', 'العميل غير مؤرشف'); l.archived_at = null; audit(u.id, 'lead', l.id, 'lead.restored', 'استعادة عميل من الأرشيف', l.id); }
+      else { if (l.archived_at) throw ERR('NO_CHANGE', 'العميل مؤرشف بالفعل'); l.archived_at = iso(); audit(u.id, 'lead', l.id, 'lead.archived', 'أرشفة عميل', l.id); }
+      l.version++; l.updated_at = iso(); return leadView(l);
+    },
+
+    /* ── follow-ups ── */
+    recordFollowUp(ctx, a) {
+      const u = ctx.user;
+      return idem(ctx, a, () => {
+        const l = getLeadFor(u, a.lead_id, { write: true }), d = a.data || {}, f = {};
+        if (!enumOk(L.interaction, d.interaction_type)) f.interaction_type = 'اختر نوع التواصل';
+        if (!enumOk(L.outcome, d.outcome)) f.outcome = 'اختر نتيجة التواصل';
+        const notes = String(d.notes || '').trim(); if (notes.length < 3) f.notes = 'ملخص التواصل مطلوب';
+        if (notes.length > 2000) f.notes = 'الملخص طويل جدًا';
+        const resp = String(d.customer_response || '').trim(); if (resp.length > 2000) f.customer_response = 'النص طويل جدًا';
+        const at = d.interaction_at ? toISO(d.interaction_at) : iso();
+        if (at === undefined) f.interaction_at = 'وقت التواصل غير صالح';
+        else if (new Date(at) > new Date(clock().getTime() + 5 * 60000)) f.interaction_at = 'لا يمكن تسجيل تواصل في المستقبل';
+        let next = null;
+        if (d.next_follow_up_at) { next = toISO(d.next_follow_up_at); if (next === undefined) f.next_follow_up_at = 'موعد المتابعة غير صالح'; else if (at && next <= at) f.next_follow_up_at = 'موعد المتابعة القادمة يجب أن يكون بعد وقت التواصل'; }
+        let newStatus = null;
+        if (d.set_status && d.set_status !== l.lead_status) {
+          if (!enumOk(L.lead_status, d.set_status)) f.set_status = 'حالة غير صالحة';
+          else if (d.set_status === 'converted') f.set_status = 'التحويل يتم بتأكيد اشتراك فقط';
+          else if (l.lead_status === 'converted') f.set_status = 'العميل مسجل بالفعل';
+          else if (!canTransition(l.lead_status, d.set_status)) f.set_status = `لا يمكن الانتقال من «${L.lead_status[l.lead_status]}» إلى «${L.lead_status[d.set_status]}»`;
+          else if (d.set_status === 'lost') f.set_status = 'استخدم تعديل العميل لتسجيل الخسارة مع السبب';
+          else newStatus = d.set_status;
+        }
+        failFields(f);
+        const fu = { id: uuid(), lead_id: l.id, created_by: u.id, interaction_type: d.interaction_type, interaction_at: at, outcome: d.outcome, customer_response: resp || null, notes, next_follow_up_at: next, created_at: iso() };
+        state.follow_ups.push(fu); // append-only
+        if (!l.last_contact_at || at > l.last_contact_at) l.last_contact_at = at;
+        if (d.outcome !== 'no_answer' && (!l.first_contact_at || at < l.first_contact_at)) l.first_contact_at = at;
+        l.next_follow_up_at = next;
+        if (newStatus) { audit(u.id, 'lead', l.id, 'lead.status_changed', `الحالة: ${L.lead_status[l.lead_status]} ← ${L.lead_status[newStatus]} (عبر تسجيل متابعة)`, l.id); l.lead_status = newStatus; }
+        l.version++; l.updated_at = iso();
+        return { follow_up: fu, lead: leadView(l) };
+      });
+    },
+    followUpWorkspace(ctx, a) {
+      const u = ctx.user; a = a || {}; const now = clock(), nowT = now.getTime();
+      const eod = new Date(now); eod.setHours(23, 59, 59, 999);
+      let leads = state.leads.filter(l => !l.archived_at && sees(u, l));
+      if (isMgr(u) && a.assigned_to) leads = leads.filter(l => l.assigned_to === a.assigned_to);
+      const last = l => state.follow_ups.filter(x => x.lead_id === l.id).sort((x, y) => new Date(y.interaction_at) - new Date(x.interaction_at))[0] || null;
+      const card = l => { const lf = last(l); return Object.assign(leadView(l), { last_interaction: lf ? { at: lf.interaction_at, type: lf.interaction_type, outcome: lf.outcome, notes: lf.notes } : null }); };
+      const open = leads.filter(l => !['converted', 'lost'].includes(l.lead_status));
+      const sched = open.filter(l => l.next_follow_up_at);
+      const byNext = (x, y) => new Date(x.next_follow_up_at) - new Date(y.next_follow_up_at);
+      const ids = new Set(leads.map(l => l.id));
+      const weekAgo = nowT - 7 * 864e5;
+      return {
+        overdue: sched.filter(l => new Date(l.next_follow_up_at) < now).sort(byNext).map(card),
+        today: sched.filter(l => { const t = new Date(l.next_follow_up_at); return t >= now && t <= eod; }).sort(byNext).map(card),
+        upcoming: sched.filter(l => new Date(l.next_follow_up_at) > eod).sort(byNext).map(card),
+        unscheduled: leads.filter(l => ACTIVE_FOLLOW.includes(l.lead_status) && !l.next_follow_up_at).map(card),
+        recent: state.follow_ups.filter(x => ids.has(x.lead_id) && new Date(x.interaction_at).getTime() >= weekAgo).sort((x, y) => new Date(y.interaction_at) - new Date(x.interaction_at)).slice(0, 100)
+          .map(x => { const l = leads.find(z => z.id === x.lead_id); return Object.assign({}, x, { lead_name: l.full_name, created_by_name: nameOf(x.created_by) }); })
+      };
+    },
+
+    /* ── feedback ── */
+    recordFeedback(ctx, a) {
+      const u = ctx.user;
+      return idem(ctx, a, () => {
+        const l = getLeadFor(u, a.lead_id, { write: true }), d = a.data || {}, f = {};
+        const def = Object.assign({ interest_level: 'unknown', price_objection: 'unknown', learning_mode_objection: 'unknown', non_registration_reason: 'unknown' }, d);
+        if (!enumOk(L.interest, def.interest_level)) f.interest_level = 'قيمة غير صالحة';
+        if (!enumOk(L.price_obj, def.price_objection)) f.price_objection = 'قيمة غير صالحة';
+        if (!enumOk(L.mode_obj, def.learning_mode_objection)) f.learning_mode_objection = 'قيمة غير صالحة';
+        if (!enumOk(L.nonreg, def.non_registration_reason)) f.non_registration_reason = 'قيمة غير صالحة';
+        const txt = String(d.customer_feedback || '').trim(), act = String(d.suggested_action || '').trim();
+        if (txt.length > 2000 || act.length > 1000) f.customer_feedback = 'النص طويل جدًا';
+        failFields(f);
+        if (def.interest_level === 'unknown' && def.price_objection === 'unknown' && def.learning_mode_objection === 'unknown' && def.non_registration_reason === 'unknown' && !txt && !act)
+          throw ERR('VALIDATION', 'لا يوجد ما يُسجَّل. حدد قيمة واحدة على الأقل أو اكتب ملاحظة', { fields: { customer_feedback: 'اكتب ملاحظة أو حدد قيمة' } });
+        const fb = { id: uuid(), lead_id: l.id, recorded_by: u.id, recorded_at: iso(), interest_level: def.interest_level, price_objection: def.price_objection, learning_mode_objection: def.learning_mode_objection, non_registration_reason: def.non_registration_reason, customer_feedback: txt || null, suggested_action: act || null };
+        state.feedback.push(fb);
+        if (fb.interest_level !== 'unknown' && l.interest_level !== fb.interest_level) { l.interest_level = fb.interest_level; l.version++; l.updated_at = iso(); }
+        return fb;
+      });
+    },
+    listFeedback(ctx, a) {
+      const u = ctx.user; a = a || {}; const r = parseRange(a.from, a.to);
+      const vis = new Map(state.leads.filter(l => !l.archived_at && sees(u, l) && (!(isMgr(u) && a.assigned_to) || l.assigned_to === a.assigned_to)).map(l => [l.id, l]));
+      let rows = state.feedback.filter(x => vis.has(x.lead_id) && ((!r.a && !r.b) || inRange(x.recorded_at, r)));
+      if (a.non_registration_reason) rows = rows.filter(x => x.non_registration_reason === a.non_registration_reason);
+      if (a.price_objection) rows = rows.filter(x => x.price_objection === a.price_objection);
+      if (a.interest_level) rows = rows.filter(x => x.interest_level === a.interest_level);
+      rows = rows.sort((x, y) => new Date(y.recorded_at) - new Date(x.recorded_at));
+      const tally = (k, skip) => rows.reduce((m, x) => { if (skip && skip.includes(x[k])) return m; m[x[k]] = (m[x[k]] || 0) + 1; return m; }, {});
+      return {
+        rows: rows.map(x => Object.assign({}, x, { lead_name: vis.get(x.lead_id).full_name, recorded_by_name: nameOf(x.recorded_by) })),
+        aggregates: { total: rows.length, price_objection: tally('price_objection', ['unknown']), learning_mode_objection: tally('learning_mode_objection', ['unknown']), non_registration_reason: tally('non_registration_reason', ['unknown']), unknown_reason: rows.filter(x => x.non_registration_reason === 'unknown').length }
+      };
+    },
+
+    /* ── enrollments ── */
+    listEnrollments(ctx, a) {
+      const u = ctx.user; a = a || {}; const r = parseRange(a.from, a.to);
+      const vis = new Map(state.leads.filter(l => !l.archived_at && sees(u, l)).map(l => [l.id, l]));
+      let rows = state.enrollments.filter(e => vis.has(e.lead_id));
+      if (a.registration_status) rows = rows.filter(e => e.registration_status === a.registration_status);
+      if (a.payment_status) rows = rows.filter(e => e.payment_status === a.payment_status);
+      if (r.a || r.b) rows = rows.filter(e => inRange(e.registration_date + 'T12:00:00', r));
+      rows = rows.sort((x, y) => (y.registration_date > x.registration_date ? 1 : -1));
+      return rows.map(e => Object.assign(enrView(e), { lead_name: vis.get(e.lead_id).full_name, recorded_by_name: nameOf(e.recorded_by) }));
+    },
+    createEnrollment(ctx, a) {
+      const u = ctx.user;
+      return idem(ctx, a, () => {
+        if (!isMgr(u) && !state.settings.sales_can_register) throw NO('تسجيل الاشتراكات متاح للمدير فقط حاليًا');
+        const l = getLeadFor(u, a.lead_id, { write: true }), d = a.data || {};
+        const { f, v } = validateEnrollment(d, null, u);
+        failFields(f);
+        const dup = state.enrollments.some(e => e.lead_id === l.id && e.course_name === v.course_name && e.registration_status !== 'cancelled');
+        if (dup && !(a.allow_duplicate && isMgr(u))) throw ERR('DUPLICATE_ENROLLMENT', isMgr(u) ? 'يوجد اشتراك فعّال لنفس العميل في هذه الدورة. يمكنك التجاوز بقرار صريح' : 'يوجد اشتراك فعّال لنفس العميل في هذه الدورة', { can_override: isMgr(u) });
+        const t = iso(), e = Object.assign({ id: uuid(), lead_id: l.id, recorded_by: u.id, created_at: t, updated_at: t, version: 1 }, v);
+        state.enrollments.push(e);
+        audit(u.id, 'enrollment', e.id, 'enrollment.created', `إنشاء اشتراك (${e.course_name}) بحالة: ${L.reg[e.registration_status]}`, l.id);
+        syncConversion(u, l);
+        return enrView(e);
+      });
+    },
+    updateEnrollment(ctx, a) {
+      const u = ctx.user, e = state.enrollments.find(x => x.id === a.id); if (!e) throw NF();
+      const l = getLeadFor(u, e.lead_id, { write: true });
+      if (a.expected_version !== undefined && a.expected_version !== e.version) throw ERR('CONFLICT', 'تم تعديل هذا الاشتراك من مستخدم آخر. أعد التحميل', { current_version: e.version });
+      if (!isMgr(u)) {
+        if (!state.settings.sales_can_register) throw NO('تعديل الاشتراكات متاح للمدير فقط حاليًا');
+        if (e.registration_status !== 'pending') throw NO('تعديل الاشتراك المؤكد أو الملغي للمدير فقط');
+      }
+      const patch = a.patch || {};
+      const bad = Object.keys(patch).filter(k => !['course_name', 'registration_date', 'course_start_date', 'course_price', 'discount_amount', 'amount_paid', 'registration_status', 'payment_status'].includes(k));
+      if (bad.length) throw ERR('FORBIDDEN_FIELD', 'حقول غير مسموح بتعديلها: ' + bad.join('، '));
+      if (patch.payment_status !== undefined && !(isMgr(u) && patch.payment_status === 'refunded')) delete patch.payment_status;
+      const merged = Object.assign({}, e, patch);
+      const { f, v } = validateEnrollment(merged, e, u);
+      failFields(f);
+      if (v.course_name !== e.course_name || (e.registration_status === 'cancelled' && v.registration_status !== 'cancelled')) {
+        if (v.registration_status !== 'cancelled' && state.enrollments.some(x => x.id !== e.id && x.lead_id === e.lead_id && x.course_name === v.course_name && x.registration_status !== 'cancelled'))
+          throw ERR('DUPLICATE_ENROLLMENT', 'يوجد اشتراك فعّال آخر لنفس العميل في هذه الدورة');
+      }
+      const was = e.registration_status;
+      const diffs = ['course_name', 'registration_date', 'course_start_date', 'course_price', 'discount_amount', 'amount_paid', 'registration_status', 'payment_status'].filter(k => JSON.stringify(v[k]) !== JSON.stringify(e[k]));
+      if (!diffs.length) return enrView(e);
+      const FL = { course_name: 'الدورة', registration_date: 'تاريخ التسجيل', course_start_date: 'بداية الدورة', course_price: 'السعر', discount_amount: 'الخصم', amount_paid: 'المدفوع', registration_status: 'حالة التسجيل', payment_status: 'حالة الدفع' };
+      const detail = diffs.map(k => ['course_price', 'discount_amount', 'amount_paid'].includes(k) ? `${FL[k]}: ${e[k]} ← ${v[k]}` : k === 'registration_status' ? `${FL[k]}: ${L.reg[e[k]]} ← ${L.reg[v[k]]}` : FL[k]).join('، ');
+      Object.assign(e, v); e.version++; e.updated_at = iso();
+      audit(u.id, 'enrollment', e.id, was !== e.registration_status ? 'enrollment.status_changed' : 'enrollment.corrected', 'تعديل اشتراك — ' + detail, l.id);
+      syncConversion(u, l);
+      return enrView(e);
+    },
+    addPayment(ctx, a) {
+      const u = ctx.user, e = state.enrollments.find(x => x.id === a.enrollment_id); if (!e) throw NF();
+      const l = getLeadFor(u, e.lead_id, { write: true });
+      if (!isMgr(u) && !state.settings.sales_can_register) throw NO();
+      if (e.registration_status === 'cancelled') throw ERR('VALIDATION', 'لا يمكن تسجيل دفعة على اشتراك ملغي');
+      if (e.payment_status === 'refunded') throw ERR('VALIDATION', 'الاشتراك مسترد');
+      if (a.expected_version !== undefined && a.expected_version !== e.version) throw ERR('CONFLICT', 'تم تعديل هذا الاشتراك. أعد التحميل', { current_version: e.version });
+      return idem(ctx, a, () => {
+        const amt = round2(a.amount), c = enrollmentCalc(e.course_price, e.discount_amount, e.amount_paid);
+        if (!isFinite(amt) || amt <= 0) throw ERR('VALIDATION', 'أدخل مبلغًا أكبر من صفر', { fields: { amount: 'أدخل مبلغًا أكبر من صفر' } });
+        if (amt > c.remaining) throw ERR('VALIDATION', `المبلغ يتجاوز المتبقي (${c.remaining} ج.م)`, { fields: { amount: `الحد الأقصى ${c.remaining} ج.م` } });
+        e.amount_paid = round2(e.amount_paid + amt);
+        e.payment_status = derivePayment(round2(e.course_price - e.discount_amount), e.amount_paid, null);
+        e.version++; e.updated_at = iso();
+        audit(u.id, 'enrollment', e.id, 'enrollment.payment', `تسجيل دفعة بقيمة ${amt} ج.م`, l.id);
+        return enrView(e);
+      });
+    },
+
+    /* ── reports / import / export ── */
+    getReports(ctx, a) { return computeReports(state, ctx.user, a || {}, clock()); },
+    exportLeads(ctx, a) {
+      const u = ctx.user, res = api.listLeads(ctx, Object.assign({}, a, { page: 1, page_size: 200 }));
+      let rows = res.rows; for (let p = 2; rows.length < res.total; p++) rows = rows.concat(api.listLeads(ctx, Object.assign({}, a, { page: p, page_size: 200 })).rows);
+      const fmt = s => s ? s.slice(0, 16).replace('T', ' ') : '';
+      const csv = toCSV(['الاسم', 'الهاتف', 'البريد', 'المحافظة', 'نمط التعلم', 'الدورة', 'المصدر', 'الحملة', 'الإعلان', 'الحالة', 'مستوى الاهتمام', 'المسؤول', 'آخر تواصل', 'المتابعة القادمة', 'تاريخ الإضافة', 'ملاحظات'],
+        rows.map(l => [l.full_name, l.normalized_phone, l.email, l.governorate, L.mode[l.preferred_learning_mode], l.course_interest, L.source[l.lead_source], l.campaign_name, l.ad_name, L.lead_status[l.lead_status], L.interest[l.interest_level], l.assigned_to_name, fmt(l.last_contact_at), fmt(l.next_follow_up_at), fmt(l.created_at), l.general_notes]));
+      audit(u.id, 'export', null, 'export.leads', `تصدير ${rows.length} عميل`);
+      return { filename: 'nova-leads-' + iso().slice(0, 10) + '.csv', csv, count: rows.length };
+    },
+    exportReport(ctx, a) {
+      const u = ctx.user, r = computeReports(state, u, a || {}, clock());
+      const rows = r.by_rep.map(x => [x.name, x.assigned, x.contacted, x.converted, x.rate == null ? '' : x.rate, x.overdue, x.completed_followups, x.median_first_contact_hours == null ? '' : x.median_first_contact_hours]);
+      audit(u.id, 'export', null, 'export.report', 'تصدير تقرير أداء');
+      return { filename: 'nova-report-' + iso().slice(0, 10) + '.csv', csv: toCSV(['المندوب', 'العملاء', 'تم التواصل', 'تسجيلات مؤكدة', 'معدل التحويل %', 'متابعات متأخرة (حاليًا)', 'متابعات مسجلة', 'وسيط أول تواصل (ساعة)'], rows) };
+    },
+    importLeads(ctx, a) {
+      const u = ctx.user, rows = a.rows || [];
+      if (rows.length > 1000) throw ERR('VALIDATION', 'الحد الأقصى 1000 صف في المرة الواحدة');
+      let assignee = u.id;
+      if (isMgr(u) && a.default_assignee) { const t = state.profiles.find(p => p.id === a.default_assignee); if (!t || !t.is_active) throw ERR('VALIDATION', 'يجب اختيار مسؤول نشط'); assignee = t.id; }
+      const SRC = {}; Object.keys(L.source).forEach(k => { SRC[k] = k; SRC[normText(L.source[k])] = k; }); Object.assign(SRC, { facebook: 'meta_ads', instagram: 'meta_ads', meta: 'meta_ads', فيسبوك: 'meta_ads', انستجرام: 'meta_ads', ميتا: 'meta_ads' });
+      const MODE = {}; Object.keys(L.mode).forEach(k => { MODE[k] = k; MODE[normText(L.mode[k])] = k; }); Object.assign(MODE, { اونلاين: 'online', 'اون لاين': 'online', حضوري: 'in_person', 'اوفلاين': 'in_person' });
+      const seen = new Set(), results = [];
+      rows.forEach((raw, i) => {
+        const errors = [], warnings = [], d = {};
+        const g = k => raw[k] == null ? '' : String(raw[k]).trim();
+        d.full_name = g('full_name'); d.phone = g('phone'); d.email = g('email'); d.governorate = g('governorate'); d.campaign_name = g('campaign_name'); d.ad_name = g('ad_name'); d.general_notes = g('general_notes');
+        const src = g('lead_source'); d.lead_source = src ? (SRC[normText(src)] || SRC[src]) : 'other'; if (src && !d.lead_source) { d.lead_source = 'other'; warnings.push('مصدر غير معروف — تم تعيينه «أخرى»'); }
+        const md = g('preferred_learning_mode'); d.preferred_learning_mode = md ? (MODE[normText(md)] || MODE[md]) : 'undecided'; if (md && !d.preferred_learning_mode) { d.preferred_learning_mode = 'undecided'; warnings.push('نمط تعلم غير معروف — تم تعيينه «لم يُحدد»'); }
+        const co = g('course_interest');
+        if (co && state.settings.courses.some(c => c.name === co)) d.course_interest = co;
+        else if (co) { d.course_interest = ''; d.general_notes = (d.general_notes ? d.general_notes + ' — ' : '') + 'الدورة المذكورة في الملف: ' + co; warnings.push('دورة غير معرفة — نُقلت إلى الملاحظات'); }
+        const { f, out } = validateLeadFields(d);
+        Object.values(f).forEach(m => errors.push(m));
+        let status = errors.length ? 'invalid' : 'ok';
+        if (status === 'ok') {
+          if (seen.has(out.normalized_phone)) { status = 'duplicate_file'; errors.push('الرقم مكرر داخل الملف'); }
+          else if (findDup(out.normalized_phone).length) { status = 'duplicate_db'; errors.push('الرقم مسجل بالفعل في النظام'); }
+          seen.add(out.normalized_phone);
+        }
+        results.push({ index: i + 1, status, errors, warnings, name: d.full_name, phone: d.phone, _out: out });
+      });
+      const summary = { total: results.length, ok: results.filter(r => r.status === 'ok').length, invalid: results.filter(r => r.status === 'invalid').length, duplicate_db: results.filter(r => r.status === 'duplicate_db').length, duplicate_file: results.filter(r => r.status === 'duplicate_file').length, imported: 0 };
+      if (a.commit) {
+        const t = iso();
+        results.filter(r => r.status === 'ok').forEach(r => {
+          const lead = Object.assign({ id: uuid(), full_name: null, phone: null, normalized_phone: null, email: null, governorate: null, preferred_learning_mode: 'undecided', course_interest: null, lead_source: 'other', campaign_name: null, ad_name: null, lead_status: 'new', interest_level: 'unknown', assigned_to: assignee, first_contact_at: null, next_follow_up_at: null, last_contact_at: null, lost_reason: null, general_notes: null, duplicate_resolution_note: null, created_by: u.id, created_at: t, updated_at: t, archived_at: null, version: 1 }, r._out);
+          state.leads.push(lead); summary.imported++;
+        });
+        audit(u.id, 'import', null, 'import.leads', `استيراد CSV: ${summary.imported} مستورد من ${summary.total} (مرفوض ${summary.invalid}، مكرر ${summary.duplicate_db + summary.duplicate_file})`);
+      }
+      return { summary, rows: results.map(r => ({ index: r.index, status: r.status, errors: r.errors, warnings: r.warnings, name: r.name, phone: r.phone })) };
+    },
+
+    /* ── audit ── */
+    listAudit(ctx, a) {
+      const u = ctx.user; if (!isMgr(u)) throw NO('سجل التغييرات للمدير فقط');
+      a = a || {}; const r = parseRange(a.from, a.to);
+      let rows = state.audit_logs.slice();
+      if (a.entity_type) rows = rows.filter(x => x.entity_type === a.entity_type);
+      if (r.a || r.b) rows = rows.filter(x => inRange(x.timestamp, r));
+      rows.sort((x, y) => new Date(y.timestamp) - new Date(x.timestamp));
+      const ps = Math.min(+a.page_size || 30, 100), page = Math.max(+a.page || 1, 1);
+      return { total: rows.length, page, page_size: ps, rows: rows.slice((page - 1) * ps, page * ps).map(x => Object.assign({}, x, { actor_name: nameOf(x.actor_user_id) })) };
+    },
+
+    /* ── demo-only tools ── */
+    demoLoadTestData(ctx) { const u = ctx.user; if (!isMgr(u)) throw NO(); const n = seedTestData(state, clock(), audit, u.id); return { leads: n }; },
+    demoReset(ctx) {
+      const u = ctx.user; if (!isMgr(u)) throw NO();
+      const keep = { profiles: state.profiles, settings: state.settings, sessions: state.sessions };
+      state = Object.assign(freshState(), keep); return { ok: true };
+    }
+  };
+
+  function validateEnrollment(d, current, u) {
+    const f = {}, v = {};
+    const course = String(d.course_name || '').trim();
+    if (!course || !state.settings.courses.some(c => c.name === course)) f.course_name = 'اختر دورة من القائمة المعرّفة';
+    v.course_name = course;
+    const dt = s => /^\d{4}-\d{2}-\d{2}$/.test(String(s || ''));
+    if (!dt(d.registration_date)) f.registration_date = 'تاريخ التسجيل مطلوب'; else v.registration_date = d.registration_date;
+    if (d.course_start_date) { if (!dt(d.course_start_date)) f.course_start_date = 'تاريخ غير صالح'; else v.course_start_date = d.course_start_date; } else v.course_start_date = null;
+    const num = (k, label) => { const x = Number(d[k] == null || d[k] === '' ? 0 : d[k]); if (!isFinite(x) || x < 0) { f[k] = label + ' يجب أن يكون رقمًا غير سالب'; return 0; } if (x > 10000000) { f[k] = 'القيمة كبيرة جدًا'; return 0; } return round2(x); };
+    const price = num('course_price', 'السعر'), disc = num('discount_amount', 'الخصم'), paid = num('amount_paid', 'المدفوع');
+    if (!f.course_price && price <= 0) f.course_price = 'حدد سعر الدورة (أكبر من صفر)';
+    if (!f.discount_amount && disc > price) f.discount_amount = 'الخصم لا يمكن أن يتجاوز سعر الدورة';
+    if (!f.amount_paid && !f.discount_amount && !f.course_price && paid > round2(price - disc)) f.amount_paid = `المدفوع لا يمكن أن يتجاوز الصافي (${round2(price - disc)} ج.م)`;
+    v.course_price = price; v.discount_amount = disc; v.amount_paid = paid;
+    const rs = d.registration_status || 'pending';
+    if (!enumOk(L.reg, rs)) f.registration_status = 'حالة غير صالحة';
+    else {
+      if (rs === 'confirmed' && !isMgr(u) && !state.settings.sales_can_confirm && !(current && current.registration_status === 'confirmed')) f.registration_status = 'تأكيد التسجيل للمدير فقط. اترك الحالة «قيد التأكيد» ليراجعها المدير';
+      if (rs === 'confirmed' && state.settings.require_deposit && paid <= 0) f.registration_status = 'لا يمكن تأكيد التسجيل دون تسجيل دفعة مقدمة (يمكن تغيير هذه القاعدة من الإعدادات)';
+    }
+    v.registration_status = rs;
+    v.payment_status = (d.payment_status === 'refunded' && paid > 0) ? 'refunded' : derivePayment(round2(price - disc), paid, null);
+    if (d.payment_status === 'refunded' && paid <= 0) f.payment_status = 'لا يمكن استرداد مبلغ غير مدفوع';
+    v.remaining_amount = round2(price - disc - paid);
+    return { f, v };
+  }
+
+  function syncConversion(u, lead) {
+    const en = state.enrollments.filter(e => e.lead_id === lead.id);
+    const hasC = en.some(e => e.registration_status === 'confirmed'), hasP = en.some(e => e.registration_status === 'pending');
+    let target = lead.lead_status;
+    if (hasC) target = 'converted';
+    else if (lead.lead_status === 'converted') target = hasP ? 'registration_pending' : 'follow_up';
+    else if (hasP && ['new', 'contacted', 'interested', 'follow_up', 'nurture'].includes(lead.lead_status)) target = 'registration_pending';
+    if (target !== lead.lead_status) {
+      audit(u.id, 'lead', lead.id, 'lead.status_changed', `الحالة: ${L.lead_status[lead.lead_status]} ← ${L.lead_status[target]} (تلقائي بسبب الاشتراكات)`, lead.id);
+      lead.lead_status = target; lead.version++; lead.updated_at = iso();
+    }
+  }
+
+  function authUser(token) {
+    const s = state.sessions[token];
+    if (!s) throw ERR('AUTH', 'انتهت الجلسة. سجّل الدخول مرة أخرى');
+    const p = state.profiles.find(x => x.id === s.user_id);
+    if (!p || !p.is_active) { delete state.sessions[token]; throw ERR('INACTIVE', 'هذا الحساب غير نشط. لا يمكنه الدخول إلى النظام'); }
+    return p;
+  }
+
+  async function call(method, token, args) {
+    if (opts.latency) await new Promise(r => setTimeout(r, opts.latency));
+    if (opts.offline && opts.offline()) throw ERR('NETWORK', 'تعذر الاتصال بالخادم. لم يتم حفظ أي تغيير. تحقق من الاتصال ثم أعد المحاولة');
+    if (!Object.prototype.hasOwnProperty.call(api, method) || method.startsWith('demo') && !opts.allowDemoTools) throw ERR('NO_METHOD', 'عملية غير معروفة');
+    const user = PUBLIC.has(method) ? null : authUser(token);
+    const out = api[method]({ user }, structuredClone(args || {}), token);
+    persist(state);
+    return structuredClone(out);
+  }
+  return { call, getState: () => state, _setState: s => { state = s; } };
+}
+
+/* ───────────── Test data (demo only, explicit user action) ───────────── */
+function seedTestData(state, now, audit, actor) {
+  let s = 42; const rnd = () => { s |= 0; s = s + 0x6D2B79F5 | 0; let t = Math.imul(s ^ s >>> 15, 1 | s); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; };
+  const pick = a => a[Math.floor(rnd() * a.length)];
+  const names = ['محمد إبراهيم', 'نور الدين', 'ياسمين خالد', 'عمر شريف', 'منة الله', 'مصطفى عادل', 'إيمان سعيد', 'حسام فؤاد', 'دينا مجدي', 'طارق نبيل', 'رنا عاطف', 'أمير جمال', 'هبة ماهر', 'يوسف رضا', 'مريم أشرف', 'إسلام وجدي', 'ندى كمال', 'بسمة ياسر', 'زياد عصام', 'آلاء حمدي', 'سلمى هشام', 'كريم عادل', 'شيرين مراد', 'باسم وليد', 'جميلة فوزي', 'معتز بالله', 'رحمة سامي', 'أنس مختار', 'هالة صلاح', 'خالد نادر'];
+  const reps = state.profiles.filter(p => p.role === 'sales' && p.is_active);
+  const courses = state.settings.courses.map(c => c.name);
+  const pricePool = { 'التسويق الرقمي': 4500, 'إعلانات ميتا': 3500, 'صناعة المحتوى': 3000, 'تيك توك للأعمال': 2500 };
+  const used = new Set(state.leads.map(l => l.normalized_phone)); let n = 0;
+  const day = 864e5, hr = 36e5;
+  names.forEach((nm, i) => {
+    let ph, np; do { ph = '01' + pick([0, 1, 2, 5]) + String(Math.floor(rnd() * 1e8)).padStart(8, '0'); np = normalizePhone(ph).normalized; } while (used.has(np)); used.add(np);
+    const created = new Date(now.getTime() - Math.floor(rnd() * 44 * day) - Math.floor(rnd() * 20 * hr));
+    const rep = reps[i % reps.length];
+    const lead = { id: uuid(), full_name: nm, phone: ph, normalized_phone: np, email: null, governorate: pick(['القاهرة', 'الجيزة', 'الإسكندرية', 'الشرقية', 'الدقهلية']), preferred_learning_mode: pick(['online', 'in_person', 'undecided']), course_interest: pick(courses), lead_source: pick(['meta_ads', 'meta_ads', 'meta_ads', 'tiktok', 'referral', 'organic', 'whatsapp']), campaign_name: null, ad_name: null, lead_status: 'new', interest_level: 'unknown', assigned_to: rep.id, first_contact_at: null, next_follow_up_at: null, last_contact_at: null, lost_reason: null, general_notes: 'بيانات اختبار تجريبية', duplicate_resolution_note: null, created_by: actor, created_at: created.toISOString(), updated_at: created.toISOString(), archived_at: null, version: 1 };
+    state.leads.push(lead); n++;
+    if (rnd() < 0.82) {
+      const k = 1 + Math.floor(rnd() * 3); let t = created.getTime() + (1 + Math.floor(rnd() * 30)) * hr;
+      for (let j = 0; j < k && t < now.getTime(); j++) {
+        const out = pick(['no_answer', 'replied', 'interested', 'requested_time', 'objected_to_price', 'requested_details', 'ready_to_register', 'not_interested']);
+        const last = j === k - 1;
+        const next = last && rnd() > 0.2 ? new Date(now.getTime() + Math.floor((rnd() * 8 - 3.5) * day)).toISOString() : (!last ? new Date(t + 2 * day).toISOString() : null);
+        state.follow_ups.push({ id: uuid(), lead_id: lead.id, created_by: rep.id, interaction_type: pick(['whatsapp', 'phone_call', 'whatsapp']), interaction_at: new Date(t).toISOString(), outcome: out, customer_response: null, notes: 'ملخص تجريبي للتواصل', next_follow_up_at: next, created_at: new Date(t).toISOString() });
+        lead.last_contact_at = new Date(t).toISOString(); if (out !== 'no_answer' && !lead.first_contact_at) lead.first_contact_at = lead.last_contact_at;
+        lead.next_follow_up_at = next;
+        lead.lead_status = out === 'ready_to_register' ? 'registration_pending' : out === 'interested' ? 'interested' : out === 'no_answer' ? (lead.first_contact_at ? lead.lead_status : 'new') : (lead.lead_status === 'new' ? 'contacted' : lead.lead_status);
+        if (out === 'objected_to_price' || out === 'requested_time') lead.lead_status = 'follow_up';
+        if (out === 'not_interested') { lead.lead_status = 'lost'; lead.lost_reason = 'غير مهتم'; lead.next_follow_up_at = null; }
+        t += (1 + Math.floor(rnd() * 3)) * day;
+      }
+    }
+    if (lead.first_contact_at && rnd() < 0.6) {
+      state.feedback.push({ id: uuid(), lead_id: lead.id, recorded_by: rep.id, recorded_at: new Date(Math.min(now.getTime(), new Date(lead.last_contact_at).getTime() + hr)).toISOString(), interest_level: pick(['high', 'medium', 'low']), price_objection: pick(['none', 'too_expensive', 'needs_installments', 'unknown']), learning_mode_objection: pick(['unknown', 'prefers_in_person', 'schedule_conflict']), non_registration_reason: pick(['price', 'timing', 'postponed', 'low_interest', 'no_response', 'chose_competitor', 'unknown']), customer_feedback: 'ملاحظة تجريبية', suggested_action: null });
+    }
+    if (lead.lead_status === 'registration_pending' || (lead.first_contact_at && rnd() < 0.18)) {
+      const course = lead.course_interest || courses[0], price = pricePool[course] || 3000, confirmed = rnd() < 0.6, paid = confirmed ? Math.round(price * pick([0.3, 0.5, 1])) : 0;
+      const e = { id: uuid(), lead_id: lead.id, course_name: course, registration_date: new Date(now.getTime() - Math.floor(rnd() * 10) * day).toISOString().slice(0, 10), course_start_date: null, course_price: price, discount_amount: 0, amount_paid: paid, payment_status: derivePayment(price, paid, null), registration_status: confirmed ? 'confirmed' : 'pending', recorded_by: rep.id, created_at: iso0(now), updated_at: iso0(now), version: 1 };
+      state.enrollments.push(e);
+      lead.lead_status = confirmed ? 'converted' : 'registration_pending';
+    }
+  });
+  audit(actor, 'demo', null, 'demo.test_data_loaded', `تحميل ${n} عميل بيانات اختبار`);
+  return n;
+}
+const iso0 = d => d.toISOString();
+
+const Nova = { L, GOVERNORATES, TRANSITIONS, ACTIVE_FOLLOW, canTransition, normalizePhone, displayPhone, parseCSV, toCSV, csvCell, normText, enrollmentCalc, derivePayment, computeReports, createServer, freshState, median, pct, round2, uuid };
+if (typeof module !== 'undefined' && module.exports) module.exports = Nova; else root.Nova = Nova;
+})(typeof window !== 'undefined' ? window : globalThis);
+
+</script>
+<script>
+/* NOVA CRM — Supabase adapter (production mode)
+ * Same contract as Nova.createServer(): call(method, token, args) -> Promise.
+ * Reads : authorized rows are fetched through PostgREST (RLS decides what the user may see) and the
+ *         same pure logic used in demo mode computes lists/reports/KPIs from them.
+ * Writes: validated with the same logic on a throw-away copy (identical Arabic messages), then written to
+ *         PostgreSQL. The database re-checks everything (RLS, triggers, constraints) and is the authority.
+ * Only the public URL + anon/publishable key are used here. Never put a service_role key in this file. */
+(function (root) {
+'use strict';
+const N = root.Nova;
+const ERR = (code, message, extra) => Object.assign(new Error(message), { code, ar: message }, extra || {});
+const AR = /[\u0600-\u06FF]/;
+
+function create(cfg) {
+  const SK = 'nova_sb_session';
+  let sess = null; try { sess = JSON.parse(sessionStorage.getItem(SK)); } catch (e) { sess = null; }
+  let me = null, cache = null, cacheAt = 0;
+  const save = () => { try { if (sess) sessionStorage.setItem(SK, JSON.stringify(sess)); else sessionStorage.removeItem(SK); } catch (e) { /* ignore */ } };
+  const invalidate = () => { cache = null; };
+
+  /* ───────── HTTP ───────── */
+  async function refreshTok() {
+    if (!sess || !sess.refresh_token) return false;
+    try {
+      const r = await fetch(cfg.url + '/auth/v1/token?grant_type=refresh_token', { method: 'POST', headers: { apikey: cfg.key, 'Content-Type': 'application/json' }, body: JSON.stringify({ refresh_token: sess.refresh_token }) });
+      if (!r.ok) return false; const j = await r.json();
+      sess.access_token = j.access_token; sess.refresh_token = j.refresh_token || sess.refresh_token; save(); return true;
+    } catch (e) { return false; }
+  }
+  async function raw(path, o) {
+    o = o || {}; let res;
+    const headers = Object.assign({ apikey: cfg.key, 'Content-Type': 'application/json', Authorization: 'Bearer ' + (sess ? sess.access_token : cfg.key) }, o.headers || {});
+    try { res = await fetch(cfg.url + path, { method: o.method || 'GET', headers, body: o.body === undefined ? undefined : JSON.stringify(o.body) }); }
+    catch (e) { throw ERR('NETWORK', 'تعذر الاتصال بالخادم. لم يتم حفظ أي تغيير. تحقق من الاتصال ثم أعد المحاولة'); }
+    if (res.status === 401 && sess && !o.retried) {
+      if (await refreshTok()) return raw(path, Object.assign({}, o, { retried: true }));
+      clear(); throw ERR('AUTH', 'انتهت الجلسة. سجّل الدخول مرة أخرى');
+    }
+    return res;
+  }
+  function mapErr(j, status) {
+    const code = j && j.code, msg = (j && j.message) || '', det = ((j && j.details) || '') + ' ' + msg;
+    if (code === '23505') {
+      if (/enrollments_one_active/.test(det)) return ERR('DUPLICATE_ENROLLMENT', 'يوجد اشتراك فعّال لنفس العميل في هذه الدورة');
+      if (/leads_phone_unique/.test(det)) return ERR('DUPLICATE_BLOCKED', 'هذا الرقم مسجل بالفعل في النظام. لا يمكن إضافته مرة أخرى؛ تواصل مع المدير لحل التعارض', { duplicates: [], hidden: true });
+      return ERR('DUPLICATE', 'القيمة مسجلة بالفعل');
+    }
+    if (code === '40001') return ERR('CONFLICT', 'تم تعديل هذا السجل من مستخدم آخر أثناء عملك. أعد تحميل البيانات ثم كرر التعديل');
+    if (code === '42501' || status === 403) return ERR('FORBIDDEN', AR.test(msg) ? msg : 'غير مصرح لك بتنفيذ هذا الإجراء');
+    if (code === '23503') return ERR('VALIDATION', 'مرجع غير صالح (سجل مرتبط غير موجود)');
+    if (code === '22023' || code === 'P0001' || code === '23514' || code === '23502') return ERR('VALIDATION', AR.test(msg) ? msg : 'بيانات غير صالحة');
+    if (status === 401) return ERR('AUTH', 'انتهت الجلسة. سجّل الدخول مرة أخرى');
+    return ERR('SERVER', AR.test(msg) ? msg : 'حدث خطأ في الخادم. حاول مرة أخرى');
+  }
+  async function req(path, o) {
+    const res = await raw(path, o); const txt = await res.text(); let j = null; try { j = txt ? JSON.parse(txt) : null; } catch (e) { j = null; }
+    if (!res.ok) throw mapErr(j, res.status);
+    return j;
+  }
+  const rpc = (fn, params) => req('/rest/v1/rpc/' + fn, { method: 'POST', body: params || {} });
+  async function fetchAll(table, order) {
+    let out = [], from = 0; const step = 1000;
+    for (;;) {
+      const rows = await req(`/rest/v1/${table}?select=*&order=${order}`, { headers: { Range: `${from}-${from + step - 1}`, 'Range-Unit': 'items' } });
+      out = out.concat(rows || []); if (!rows || rows.length < step) break; from += step;
+    }
+    return out;
+  }
+  async function patchRow(table, id, version, body) {
+    const q = `/rest/v1/${table}?id=eq.${encodeURIComponent(id)}` + (version != null ? `&version=eq.${encodeURIComponent(version)}` : '');
+    const rows = await req(q, { method: 'PATCH', body, headers: { Prefer: 'return=representation' } });
+    if (!rows || !rows.length) throw ERR('CONFLICT', 'تم تعديل هذا السجل من مستخدم آخر أو لم يعد متاحًا لك. أعد تحميل البيانات ثم كرر التعديل');
+    return rows[0];
+  }
+
+  /* ───────── Auth ───────── */
+  async function loadMe() {
+    const rows = await req(`/rest/v1/profiles?id=eq.${encodeURIComponent(sess.user_id)}&select=*`);
+    if (!rows || !rows.length || !rows[0].is_active) throw ERR('INACTIVE', 'حسابك غير نشط أو لم يُفعَّل بعد. تواصل مع المدير');
+    me = rows[0]; return me;
+  }
+  async function signIn(email, password) {
+    let res;
+    try { res = await fetch(cfg.url + '/auth/v1/token?grant_type=password', { method: 'POST', headers: { apikey: cfg.key, 'Content-Type': 'application/json' }, body: JSON.stringify({ email: String(email || '').trim(), password: String(password || '') }) }); }
+    catch (e) { throw ERR('NETWORK', 'تعذر الاتصال بالخادم. تحقق من الاتصال ثم أعد المحاولة'); }
+    const j = await res.json().catch(() => ({}));
+    if (!res.ok || !j.access_token) throw ERR('AUTH', 'البريد الإلكتروني أو كلمة المرور غير صحيحة');
+    sess = { access_token: j.access_token, refresh_token: j.refresh_token, user_id: j.user.id }; save(); invalidate();
+    try { return await loadMe(); } catch (e) { await signOut(); throw e; }
+  }
+  function clear() { sess = null; me = null; cache = null; save(); }
+  async function signOut() { try { if (sess) await fetch(cfg.url + '/auth/v1/logout', { method: 'POST', headers: { apikey: cfg.key, Authorization: 'Bearer ' + sess.access_token } }); } catch (e) { /* ignore */ } clear(); }
+  async function restore() { if (!sess) return null; try { return await loadMe(); } catch (e) { clear(); return null; } }
+
+  /* ───────── Load authorized data into a local state ───────── */
+  const TS = { leads: ['first_contact_at', 'next_follow_up_at', 'last_contact_at', 'created_at', 'updated_at', 'archived_at'], follow_ups: ['interaction_at', 'next_follow_up_at', 'created_at'], feedback: ['recorded_at'], enrollments: ['created_at', 'updated_at'], audit_logs: ['timestamp'], profiles: ['created_at', 'updated_at'] };
+  const normTs = (table, rows) => rows.map(r => { const o = Object.assign({}, r); TS[table].forEach(k => { if (o[k]) o[k] = new Date(o[k]).toISOString(); }); return o; });
+  function toSettings(rows) {
+    const m = {}; (rows || []).forEach(r => { m[r.key] = r.value; });
+    return { courses: Array.isArray(m.courses) ? m.courses : [], sales_can_register: m.sales_can_register !== false, sales_can_confirm: m.sales_can_confirm === true, require_deposit: m.require_deposit !== false };
+  }
+  async function load(force) {
+    if (!force && cache && Date.now() - cacheAt < 2500) return cache;
+    const mgr = me.role === 'manager';
+    const [profiles, dir, leads, fus, fbs, enr, set, audit] = await Promise.all([
+      fetchAll('profiles', 'created_at.asc'), rpc('user_directory'), fetchAll('leads', 'created_at.desc'), fetchAll('follow_ups', 'created_at.asc'),
+      fetchAll('feedback', 'recorded_at.asc'), fetchAll('enrollments', 'created_at.asc'), req('/rest/v1/app_settings?select=*'), mgr ? fetchAll('audit_logs', 'id.asc') : Promise.resolve([])]);
+    const pm = new Map(); (dir || []).forEach(p => pm.set(p.id, { id: p.id, full_name: p.full_name, email: '', role: p.role, is_active: p.is_active, created_at: '', updated_at: '' }));
+    normTs('profiles', profiles).forEach(p => pm.set(p.id, p));
+    if (!pm.has(me.id)) pm.set(me.id, me);
+    cache = { v: 1, profiles: Array.from(pm.values()), leads: normTs('leads', leads), follow_ups: normTs('follow_ups', fus), feedback: normTs('feedback', fbs), enrollments: normTs('enrollments', enr), audit_logs: normTs('audit_logs', audit), settings: toSettings(set), sessions: {}, requests: {} };
+    cacheAt = Date.now(); return cache;
+  }
+  function local(st) { const tok = 'remote'; st.sessions[tok] = { user_id: me.id, created_at: new Date().toISOString() }; return { s: N.createServer({ state: st }), tok }; }
+
+  /* ───────── Writes (validated on a copy, then persisted) ───────── */
+  const pick = (o, ks) => { const r = {}; ks.forEach(k => { if (o[k] !== undefined) r[k] = o[k]; }); return r; };
+  const LEAD_COLS = ['full_name', 'phone', 'email', 'governorate', 'preferred_learning_mode', 'course_interest', 'lead_source', 'campaign_name', 'ad_name', 'interest_level', 'next_follow_up_at', 'general_notes'];
+  const same = (a, b) => JSON.stringify(a == null ? null : a) === JSON.stringify(b == null ? null : b);
+  const phoneTaken = async phone => (await rpc('phone_exists', { p_phone: phone })) === true;
+  const dupBlocked = () => ERR('DUPLICATE_BLOCKED', 'هذا الرقم مسجل بالفعل في النظام. لا يمكن إضافته مرة أخرى؛ تواصل مع المدير لحل التعارض', { duplicates: [], hidden: true });
+  const W = {};
+  W.createLead = async (a, dry) => {
+    if (me.role !== 'manager' && await phoneTaken(dry.phone)) throw dupBlocked();
+    const row = pick(dry, LEAD_COLS); row.assigned_to = dry.assigned_to;
+    if (dry.duplicate_resolution_note) row.duplicate_resolution_note = dry.duplicate_resolution_note;
+    const rows = await req('/rest/v1/leads', { method: 'POST', body: row, headers: { Prefer: 'return=representation' } });
+    return rows[0];
+  };
+  W.updateLead = async (a, dry, c) => {
+    const cur = c.st.leads.find(l => l.id === a.id), patch = {};
+    Object.keys(a.patch || {}).concat(['lead_status', 'lost_reason']).forEach(k => { if (dry[k] !== undefined && !same(dry[k], cur[k])) patch[k] = dry[k]; });
+    if (!Object.keys(patch).length) return dry;
+    if (patch.phone && me.role !== 'manager' && dry.normalized_phone !== cur.normalized_phone && await phoneTaken(patch.phone)) throw ERR('VALIDATION', 'هذا الرقم مسجل لعميل آخر. تواصل مع المدير', { fields: { phone: 'هذا الرقم مسجل لعميل آخر' } });
+    return patchRow('leads', a.id, a.expected_version != null ? a.expected_version : cur.version, patch);
+  };
+  W.assignLead = (a, dry, c) => patchRow('leads', a.id, a.expected_version != null ? a.expected_version : c.st.leads.find(l => l.id === a.id).version, { assigned_to: a.assigned_to });
+  W.archiveLead = (a, dry, c) => patchRow('leads', a.id, c.st.leads.find(l => l.id === a.id).version, { archived_at: a.restore ? null : new Date().toISOString() });
+  W.recordFollowUp = async (a, dry, c) => {
+    const f = dry.follow_up, cur = c.st.leads.find(l => l.id === a.lead_id), d = a.data || {};
+    const id = await rpc('record_follow_up', { p_lead: a.lead_id, p_type: f.interaction_type, p_outcome: f.outcome, p_notes: f.notes, p_response: f.customer_response, p_interaction_at: f.interaction_at, p_next: f.next_follow_up_at, p_set_status: d.set_status && d.set_status !== cur.lead_status ? d.set_status : null });
+    return { follow_up: Object.assign({}, f, { id }), lead: dry.lead };
+  };
+  W.recordFeedback = async (a, dry, c) => {
+    const rows = await req('/rest/v1/feedback', { method: 'POST', body: Object.assign({ lead_id: a.lead_id }, pick(dry, ['interest_level', 'price_objection', 'learning_mode_objection', 'non_registration_reason', 'customer_feedback', 'suggested_action'])), headers: { Prefer: 'return=representation' } });
+    const cur = c.st.leads.find(l => l.id === a.lead_id);
+    if (dry.interest_level !== 'unknown' && cur.interest_level !== dry.interest_level) { try { await patchRow('leads', cur.id, cur.version, { interest_level: dry.interest_level }); } catch (e) { /* secondary sync; feedback itself is saved */ } }
+    return rows[0];
+  };
+  const ENR_COLS = ['course_name', 'registration_date', 'course_start_date', 'course_price', 'discount_amount', 'amount_paid', 'registration_status'];
+  W.createEnrollment = async (a, dry) => {
+    const row = Object.assign({ lead_id: a.lead_id }, pick(dry, ENR_COLS));
+    if (a.allow_duplicate && me.role === 'manager') row.duplicate_override_note = 'تجاوز بقرار المدير';
+    return (await req('/rest/v1/enrollments', { method: 'POST', body: row, headers: { Prefer: 'return=representation' } }))[0];
+  };
+  W.updateEnrollment = (a, dry, c) => {
+    const cur = c.st.enrollments.find(e => e.id === a.id), body = pick(dry, ENR_COLS);
+    if (dry.payment_status === 'refunded') body.payment_status = 'refunded';
+    return patchRow('enrollments', a.id, a.expected_version != null ? a.expected_version : cur.version, body);
+  };
+  W.addPayment = (a, dry, c) => patchRow('enrollments', a.enrollment_id, a.expected_version != null ? a.expected_version : c.st.enrollments.find(e => e.id === a.enrollment_id).version, { amount_paid: dry.amount_paid });
+  W.updateUser = async (a, dry, c) => {
+    const p = a.patch || {};
+    if (p.is_active === false && p.reassign_to) {
+      const open = c.st.leads.filter(l => l.assigned_to === a.id && !l.archived_at && !['converted', 'lost'].includes(l.lead_status));
+      for (const l of open) await patchRow('leads', l.id, l.version, { assigned_to: p.reassign_to });
+    }
+    const body = pick(p, ['full_name', 'role', 'is_active']);
+    if (!Object.keys(body).length) return dry;
+    const rows = await req(`/rest/v1/profiles?id=eq.${encodeURIComponent(a.id)}`, { method: 'PATCH', body, headers: { Prefer: 'return=representation' } });
+    if (!rows || !rows.length) throw ERR('FORBIDDEN', 'غير مصرح لك بتعديل هذا المستخدم');
+    return rows[0];
+  };
+  W.createUser = async () => { throw ERR('UNSUPPORTED', 'تُنشأ الحسابات من لوحة Supabase (Authentication ← Add user). بعد إنشائها يظهر المستخدم هنا غير نشط ويمكنك تفعيله.'); };
+  W.updateSettings = async (a, dry) => {
+    const s = a.settings || {}, rows = [];
+    if (s.courses !== undefined) rows.push({ key: 'courses', value: dry.courses });
+    ['sales_can_register', 'sales_can_confirm', 'require_deposit'].forEach(k => { if (typeof s[k] === 'boolean') rows.push({ key: k, value: s[k] }); });
+    if (rows.length) await req('/rest/v1/app_settings?on_conflict=key', { method: 'POST', body: rows, headers: { Prefer: 'resolution=merge-duplicates' } });
+    return dry;
+  };
+  W.importLeads = async (a, dry, c) => {
+    if (!a.commit) return dry;
+    const before = new Set(c.st.leads.map(l => l.id)), fresh = c.s.getState().leads.filter(l => !before.has(l.id));
+    let imported = 0, dups = 0, failed = 0, i = 0;
+    const worker = async () => {
+      while (i < fresh.length) {
+        const l = fresh[i++];
+        try { await req('/rest/v1/leads', { method: 'POST', body: Object.assign(pick(l, LEAD_COLS), { assigned_to: l.assigned_to }) }); imported++; }
+        catch (e) { if (e.code === 'DUPLICATE_BLOCKED' || e.code === 'DUPLICATE') dups++; else if (e.code === 'NETWORK' || e.code === 'AUTH') throw e; else failed++; }
+      }
+    };
+    await Promise.all([worker(), worker(), worker(), worker()]);
+    const s = dry.summary; s.imported = imported; s.duplicate_db += dups; s.invalid += failed; s.ok = imported;
+    try { await rpc('log_event', { p_action: 'import.leads', p_summary: `استيراد CSV: ${imported} مستورد من ${s.total} (مرفوض ${s.invalid}، مكرر ${s.duplicate_db + s.duplicate_file})` }); } catch (e) { /* audit best effort */ }
+    return dry;
+  };
+
+  const READ = new Set(['me', 'bootstrap', 'listUsers', 'getSettings', 'listLeads', 'getLead', 'followUpWorkspace', 'listFeedback', 'listEnrollments', 'getReports', 'listAudit']);
+  async function call(method, _token, args) {
+    args = args || {};
+    if (method === 'logout') { await signOut(); return { ok: true }; }
+    if (!me) throw ERR('AUTH', 'انتهت الجلسة. سجّل الدخول مرة أخرى');
+    if (READ.has(method)) { const st = await load(); const l = local(st); return l.s.call(method, l.tok, args); }
+    if (method === 'exportLeads' || method === 'exportReport') {
+      const st = await load(); const l = local(structuredClone(st)); const out = await l.s.call(method, l.tok, args);
+      await rpc('log_event', { p_action: method === 'exportLeads' ? 'export.leads' : 'export.report', p_summary: method === 'exportLeads' ? `تصدير ${out.count} عميل` : 'تصدير تقرير أداء' });
+      return out;
+    }
+    if (method.startsWith('demo')) throw ERR('UNSUPPORTED', 'أدوات الوضع التجريبي غير متاحة في وضع الإنتاج');
+    if (!W[method]) throw ERR('NO_METHOD', 'عملية غير معروفة');
+    const st = await load(true), l = local(structuredClone(st));
+    const dry = await l.s.call(method, l.tok, args);
+    const out = await W[method](args, dry, { st, s: l.s, tok: l.tok });
+    invalidate(); return out;
+  }
+  return { call, signIn, signOut, restore, clear, getMe: () => me };
+}
+root.NovaRemote = { create };
+if (typeof module !== 'undefined' && module.exports) module.exports = root.NovaRemote;
+})(typeof window !== 'undefined' ? window : globalThis);
+
+</script>
+<script>
+(function () {
+'use strict';
+const N = window.Nova, L = N.L;
+
+/* ═════════ Adapter wiring (DEMO: simulated server in this browser) ═════════ */
+const LS_KEY = 'nova_crm_demo_v1', TOK_KEY = 'nova_crm_demo_tok';
+let saved = null; try { saved = JSON.parse(localStorage.getItem(LS_KEY)); } catch (e) { saved = null; }
+const ST = { storageOK: true };
+const persist = st => { try { localStorage.setItem(LS_KEY, JSON.stringify(st)); } catch (e) { ST.storageOK = false; } };
+const OFFLINE = { on: false };
+const CFG = window.NOVA_CONFIG && window.NOVA_CONFIG.url ? window.NOVA_CONFIG : null;
+const REMOTE = CFG && window.NovaRemote ? window.NovaRemote.create(CFG) : null;
+const srv = REMOTE || N.createServer({ state: saved && saved.v === 1 ? saved : undefined, persist, latency: 140, offline: () => OFFLINE.on, allowDemoTools: true });
+const S = { token: null, me: null, dir: [], settings: null, route: { name: 'dashboard' }, nav: 0,
+  dash: { preset: '30', from: '', to: '', rep: '' }, leads: { q: '', status: '', assigned_to: '', interest: '', course: '', source: '', from: '', to: '', overdue: false, sort: 'created_at', dir: 'desc', page: 1, archived: false },
+  fu: { tab: null, rep: '' }, fb: { preset: '30', from: '', to: '', rep: '', reason: '', price: '', interest: '' }, en: { reg: '', pay: '', from: '', to: '' },
+  rep: { preset: '30', from: '', to: '', rep: '' }, au: { entity: '', from: '', to: '', page: 1 }, leadTab: 'overview' };
+try { S.token = sessionStorage.getItem(TOK_KEY); } catch (e) { /* ignore */ }
+const api = (m, a) => srv.call(m, S.token, a);
+
+/* ═════════ Helpers ═════════ */
+const $ = (s, r) => (r || document).querySelector(s), $$ = (s, r) => Array.from((r || document).querySelectorAll(s));
+const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const isMgr = () => S.me && S.me.role === 'manager';
+const DF = new Intl.DateTimeFormat('ar-EG-u-nu-latn', { day: 'numeric', month: 'short', year: 'numeric' });
+const DTF = new Intl.DateTimeFormat('ar-EG-u-nu-latn', { day: 'numeric', month: 'short', hour: 'numeric', minute: '2-digit' });
+const fmtD = i => i ? DF.format(new Date(i.length === 10 ? i + 'T12:00:00' : i)) : '—';
+const fmtDT = i => i ? DTF.format(new Date(i)) : '—';
+const money = x => (x == null ? '—' : new Intl.NumberFormat('en-US', { maximumFractionDigits: 2 }).format(x) + ' ج.م');
+const P = x => x == null ? '—' : x + '%';
+const pad = n => String(n).padStart(2, '0');
+const toLocalInput = d => { d = d instanceof Date ? d : new Date(d); return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`; };
+const todayStr = () => { const d = new Date(); return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`; };
+const num = x => `<span class="num">${esc(x)}</span>`;
+const phoneCell = l => num(N.displayPhone(l.normalized_phone) || l.phone);
+let _uid = 0; const uid = () => 'f' + (++_uid);
+const opts = (map, cur, extra) => (extra || '') + Object.keys(map).map(k => `<option value="${esc(k)}"${k === cur ? ' selected' : ''}>${esc(map[k])}</option>`).join('');
+const tag = (cls, text) => `<span class="tag ${esc(cls)}">${esc(text)}</span>`;
+const activeUsers = () => S.dir.filter(u => u.is_active);
+const userOpts = (cur, onlyActive) => (onlyActive ? activeUsers() : S.dir).map(u => `<option value="${esc(u.id)}"${u.id === cur ? ' selected' : ''}>${esc(u.full_name)}${u.is_active ? '' : ' (غير نشط)'}</option>`).join('');
+const ICON = {
+  dashboard: '<rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/>',
+  leads: '<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6M16 4.5a3.5 3.5 0 010 7M18 14.5c2.2.7 3.5 2.6 3.5 5.5"/>',
+  followups: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>', feedback: '<path d="M4 5h16v11H9l-5 4z"/>',
+  enrollments: '<path d="M5 3h10l4 4v14H5z"/><path d="M9 13l2 2 4-4"/>', reports: '<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>',
+  users: '<circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/>', audit: '<path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M9 12l2 2 4-4"/>',
+  settings: '<circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1L7 17M17 7l2.1-2.1"/>'
+};
+const svg = k => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICON[k]}</svg>`;
+const NAV = [
+  ['dashboard', 'لوحة التحكم', 'Dashboard'], ['leads', 'العملاء', 'Leads'], ['followups', 'المتابعات', 'Follow-ups'], ['feedback', 'آراء العملاء وأسباب التردد', 'Feedback'],
+  ['enrollments', 'الاشتراكات', 'Enrollments'], ['reports', 'التقارير', 'Reports'], ['users', 'المستخدمون والصلاحيات', 'Users', 'mgr'], ['audit', 'سجل التغييرات', 'Audit', 'mgr'], ['settings', 'الإعدادات', 'Settings', 'mgr']
+];
+
+/* toast / dialogs */
+function toast(msg, type) {
+  const t = document.createElement('div'); t.className = 'toast' + (type === 'err' ? ' err' : ''); t.setAttribute('role', type === 'err' ? 'alert' : 'status'); t.textContent = msg;
+  $('#toasts').appendChild(t); setTimeout(() => t.remove(), type === 'err' ? 7000 : 3800);
+}
+const fail = err => { if (err && (err.code === 'AUTH' || err.code === 'INACTIVE')) { forceLogout(err.message); return; } toast((err && err.message) || 'حدث خطأ غير متوقع', 'err'); };
+function openModal(title, body, o) {
+  o = o || {}; const d = document.createElement('dialog'); if (o.sm) d.className = 'sm';
+  d.setAttribute('aria-label', title);
+  d.innerHTML = `<div class="dlg-head"><h2>${esc(title)}</h2><button type="button" class="x" data-act="closeModal" aria-label="إغلاق">×</button></div><div class="dlg-body">${body}</div>`;
+  document.body.appendChild(d); d.addEventListener('close', () => d.remove()); d.showModal(); return d;
+}
+const closeModals = () => $$('dialog').forEach(d => { try { d.close(); } catch (e) { d.remove(); } });
+function confirmBox(o) {
+  return new Promise(res => {
+    const d = openModal(o.title || 'تأكيد', `<p style="margin:0 0 14px">${o.html || esc(o.msg)}</p><div class="form-foot"><button class="btn ${o.danger ? 'danger' : 'primary'}" data-v="1">${esc(o.ok || 'تأكيد')}</button><button class="btn" data-v="0">إلغاء</button></div>`, { sm: true });
+    let done = false; const fin = v => { if (done) return; done = true; res(v); d.close(); };
+    d.addEventListener('click', e => { const b = e.target.closest('[data-v]'); if (b) fin(b.dataset.v === '1'); });
+    d.addEventListener('close', () => { if (!done) { done = true; res(false); } });
+  });
+}
+const loading = '<div class="loading"><span class="spin"></span>جارٍ التحميل…</div>';
+
+/* form builders */
+function fld(label, name, ctl, o) {
+  o = o || {}; const id = uid();
+  return `<div class="fld${o.full ? ' full' : ''}"><label for="${id}">${esc(label)}${o.req ? ' <span class="req" aria-hidden="true">*</span>' : ''}</label>${ctl(id)}<div class="err" data-err="${esc(name)}" role="alert"></div>${o.hint ? `<div class="hint">${esc(o.hint)}</div>` : ''}</div>`;
+}
+const inp = (name, o) => id => { o = o || {}; return `<input id="${id}" name="${name}" type="${o.type || 'text'}" value="${esc(o.value == null ? '' : o.value)}"${o.ph ? ` placeholder="${esc(o.ph)}"` : ''}${o.req ? ' required' : ''}${o.list ? ` list="${o.list}"` : ''}${o.extra || ''} autocomplete="off">`; };
+const sel = (name, inner, extra) => id => `<select id="${id}" name="${name}"${extra || ''}>${inner}</select>`;
+const txt = (name, value, extra) => id => `<textarea id="${id}" name="${name}"${extra || ''}>${esc(value || '')}</textarea>`;
+const courseOpts = cur => `<option value="">— بدون —</option>` + S.settings.courses.map(c => `<option value="${esc(c.name)}"${c.name === cur ? ' selected' : ''}>${esc(c.name)}</option>`).join('');
+const formData = f => { const o = {}; new FormData(f).forEach((v, k) => { o[k] = typeof v === 'string' ? v : ''; }); return o; };
+
+/* ═════════ Events ═════════ */
+const ACT = {}, FORM = {}, CHG = {}, INP = {};
+document.addEventListener('click', e => { const t = e.target.closest('[data-act]'); if (!t) return; const fn = ACT[t.dataset.act]; if (!fn) return; if (t.tagName === 'A' && !t.dataset.prevent) return; e.preventDefault(); Promise.resolve().then(() => fn(t, e)).catch(fail); });
+document.addEventListener('submit', async e => {
+  const f = e.target.closest('form[data-form]'); if (!f) return; e.preventDefault();
+  const fn = FORM[f.dataset.form]; if (!fn || f._busy) return;
+  f._busy = true; const btns = $$('button[type=submit]', f), labels = btns.map(b => b.innerHTML);
+  btns.forEach(b => { b.disabled = true; b.innerHTML = '<span class="spin"></span>جارٍ الحفظ…'; });
+  $$('.fld.bad', f).forEach(x => x.classList.remove('bad')); $$('.err', f).forEach(x => { x.textContent = ''; }); const fe = $('.form-err', f); if (fe) fe.innerHTML = '';
+  try { await fn(f); } catch (err) { if (err && (err.code === 'AUTH' || err.code === 'INACTIVE')) forceLogout(err.message); else showFormError(f, err); }
+  finally { f._busy = false; btns.forEach((b, i) => { if (b.isConnected) { b.disabled = false; b.innerHTML = labels[i]; } }); }
+});
+document.addEventListener('change', e => { const t = e.target.closest('[data-change]'); if (t && CHG[t.dataset.change]) Promise.resolve().then(() => CHG[t.dataset.change](t, e)).catch(fail); });
+document.addEventListener('input', e => { const t = e.target.closest('[data-input]'); if (t && INP[t.dataset.input]) INP[t.dataset.input](t, e); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') $$('.side.open').forEach(s => s.classList.remove('open')); });
+function showFormError(f, err) {
+  let extra = '';
+  if (err.fields) Object.keys(err.fields).forEach(k => { const el = $(`[data-err="${k}"]`, f); if (el) { el.textContent = err.fields[k]; el.closest('.fld').classList.add('bad'); } });
+  if (err.code === 'CONFLICT') extra = ' <button type="button" class="btn sm" data-act="reloadView">إعادة تحميل البيانات</button>';
+  const box = $('.form-err', f); const msg = esc(err.message || 'حدث خطأ غير متوقع');
+  if (box) box.innerHTML = `<div class="alert-box err" role="alert">${msg}${extra}</div>`; else toast(err.message || 'خطأ', 'err');
+  const first = $('.fld.bad input,.fld.bad select,.fld.bad textarea', f); if (first) first.focus();
+}
+ACT.closeModal = t => t.closest('dialog').close();
+ACT.reloadView = () => { closeModals(); renderView(); };
+const formShell = (name, inner, o) => { o = o || {}; return `<form data-form="${name}" novalidate>${inner}<div class="form-err"></div><div class="form-foot"><button type="submit" class="btn primary">${esc(o.submit || 'حفظ')}</button>${o.cancel === false ? '' : '<button type="button" class="btn" data-act="closeModal">إلغاء</button>'}</div></form>`; };
+
+/* ═════════ Auth / shell ═════════ */
+let booted = false;
+async function boot() {
+  if (booted) return; booted = true;
+  const root = $('#root');
+  if (REMOTE) { const m = await REMOTE.restore(); if (m) { S.token = 'remote'; try { await loadBootstrap(); renderShell(); return; } catch (e) { REMOTE.clear(); } } renderLogin(root); return; }
+  if (S.token) { try { await loadBootstrap(); renderShell(); return; } catch (e) { S.token = null; } }
+  renderLogin(root);
+}
+async function loadBootstrap() { const b = await api('bootstrap'); S.me = b.me; S.dir = b.directory; S.settings = b.settings; }
+async function renderLogin(root, msg) {
+  root = root || $('#root');
+  if (REMOTE) { root.innerHTML = `<div class="login"><div class="login-art"><div class="big">NOVA<br><i>CRM</i></div><div><p>إدارة العملاء المحتملين والمتابعات والاشتراكات لفريق NOVA FOR MARKETING.</p></div></div><div class="login-form"><h1>تسجيل الدخول</h1>${msg ? `<div class="alert-box err" role="alert">${esc(msg)}</div>` : ''}<form data-form="signin" novalidate>${fld('البريد الإلكتروني', 'email', inp('email', { type: 'email', req: true }), { req: true })}<div style="height:10px"></div>${fld('كلمة المرور', 'password', inp('password', { type: 'password', req: true }), { req: true })}<div class="form-err"></div><div class="form-foot"><button type="submit" class="btn primary">دخول</button></div></form><p class="hint">الحسابات يُنشئها المدير. لا يوجد تسجيل ذاتي.</p></div></div>`; return; }
+  const profiles = await srv.call('listLoginProfiles', null, {});
+  root.innerHTML = `<div class="login"><div class="login-art"><div class="big">NOVA<br><i>CRM</i></div><div><p>إدارة العملاء المحتملين والمتابعات والاشتراكات لفريق NOVA FOR MARKETING.</p></div></div>
+  <div class="login-form"><h1>تسجيل الدخول</h1>
+  <div class="alert-box warn"><b>وضع تجريبي.</b> اختيار الحساب هنا لا يمثل مصادقة حقيقية: لا توجد كلمة مرور ولا خادم، والبيانات تُحفظ في هذا المتصفح فقط.</div>
+  ${msg ? `<div class="alert-box err" role="alert">${esc(msg)}</div>` : ''}
+  <div style="display:flex;flex-direction:column;gap:8px">${profiles.map(p => `<button class="acct" data-act="login" data-id="${esc(p.id)}"${p.is_active ? '' : ' disabled'}><span><b>${esc(p.full_name)}</b><br><span class="small muted">${esc(L.role[p.role])}</span></span>${p.is_active ? '' : tag('lost', 'غير نشط')}</button>`).join('')}</div></div></div>`;
+}
+ACT.login = async t => {
+  t.disabled = true;
+  try { const r = await srv.call('login', null, { profile_id: t.dataset.id }); S.token = r.token; try { sessionStorage.setItem(TOK_KEY, r.token); } catch (e) { /* ignore */ } await loadBootstrap(); if (!location.hash || location.hash === '#/') location.hash = '#/dashboard'; renderShell(); }
+  catch (e) { t.disabled = false; toast(e.message, 'err'); }
+};
+ACT.logout = async () => { try { await api('logout'); } catch (e) { /* ignore */ } forceLogout(); };
+function forceLogout(msg) { if (REMOTE) REMOTE.clear(); S.token = null; S.me = null; try { sessionStorage.removeItem(TOK_KEY); } catch (e) { /* ignore */ } closeModals(); renderLogin($('#root'), msg); }
+function parseRoute() {
+  const h = (location.hash || '#/dashboard').replace(/^#\/?/, '').split('/'); const name = h[0] || 'dashboard';
+  const known = NAV.map(n => n[0]).concat(['lead']);
+  const r = known.includes(name) ? { name, id: h[1], tab: h[2] } : { name: 'dashboard' };
+  const nv = NAV.find(n => n[0] === r.name); if (nv && nv[3] === 'mgr' && !isMgr()) return { name: 'dashboard' };
+  return r;
+}
+function renderShell() {
+  const items = NAV.filter(n => n[3] !== 'mgr' || isMgr());
+  $('#root').innerHTML = `<div class="app"><aside class="side" id="side" aria-label="القائمة الرئيسية"><div class="brand"><b>NOVA<i>.</i></b><span>FOR MARKETING · إدارة العملاء</span></div>
+  <nav class="nav">${items.map(n => `<a href="#/${n[0]}" data-nav="${n[0]}">${svg(n[0])}<span>${esc(n[1])}</span>${n[0] === 'followups' ? '<span class="badge" id="fu-badge" hidden></span>' : ''}</a>`).join('')}</nav>
+  <div class="side-foot"><div class="who">${esc(S.me.full_name)}</div><div class="muted">${esc(L.role[S.me.role])}</div><button data-act="logout">تسجيل الخروج</button></div></aside>
+  <div class="main"><div class="topbar"><button data-act="toggleNav" aria-label="القائمة" aria-controls="side">☰</button><b>NOVA<i>.</i></b></div>
+  ${REMOTE ? '' : `<div class="demo-bar" id="demo-bar"><b>وضع تجريبي</b><span>البيانات محلية في هذا المتصفح فقط — لا قاعدة بيانات ولا مصادقة حقيقية ولا مشاركة بين الأجهزة.</span><span id="off-flag"></span></div>`}
+  <main class="content" id="view" tabindex="-1"></main></div></div>`;
+  updateOfflineFlag(); renderView();
+}
+ACT.toggleNav = () => { const s = $('#side'); s.classList.toggle('open'); let sc = $('.scrim'); if (s.classList.contains('open')) { if (!sc) { sc = document.createElement('div'); sc.className = 'scrim'; sc.dataset.act = 'closeNav'; document.body.appendChild(sc); } } else if (sc) sc.remove(); };
+ACT.closeNav = () => { const s = $('#side'); if (s) s.classList.remove('open'); const sc = $('.scrim'); if (sc) sc.remove(); };
+function updateOfflineFlag() { const f = $('#off-flag'); if (f) f.innerHTML = OFFLINE.on ? '<span class="tag lost">محاكاة انقطاع الشبكة مفعلة</span> <button class="btn sm" data-act="offlineOff">إيقاف المحاكاة</button>' : (ST.storageOK ? '' : '<span class="tag lost">تعذر الحفظ المحلي في هذا العرض — ستضيع البيانات عند التحديث</span>'); }
+window.addEventListener('hashchange', () => { if (S.me) { ACT.closeNav(); closeModals(); renderView(); } });
+
+async function renderView() {
+  if (!S.me) return;
+  const r = S.route = parseRoute(); const my = ++S.nav; const el = $('#view'); if (!el) return;
+  $$('[data-nav]').forEach(a => { const on = a.dataset.nav === (r.name === 'lead' ? 'leads' : r.name); if (on) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current'); });
+  el.innerHTML = loading;
+  try {
+    const V = { dashboard: viewDashboard, leads: viewLeads, lead: viewLead, followups: viewFollowups, feedback: viewFeedback, enrollments: viewEnrollments, reports: viewReports, users: viewUsers, audit: viewAudit, settings: viewSettings }[r.name];
+    await V(el, my);
+  } catch (e) { if (my === S.nav) { if (e.code === 'AUTH' || e.code === 'INACTIVE') forceLogout(e.message); else el.innerHTML = `<div class="card"><div class="alert-box err" role="alert">${esc(e.message)}</div><div class="form-foot"><button class="btn" data-act="reloadView">إعادة المحاولة</button></div></div>`; } }
+  refreshBadge();
+}
+async function refreshBadge() { try { const w = await api('followUpWorkspace', {}); const b = $('#fu-badge'); if (b) { b.hidden = !w.overdue.length; b.textContent = w.overdue.length; b.title = 'متابعات متأخرة'; } } catch (e) { /* ignore */ } }
+const stale = my => my !== S.nav;
+const head = (title, sub, actions) => `<div class="page-head"><div><h1>${esc(title)}</h1>${sub ? `<p>${sub}</p>` : ''}</div><div class="actions">${actions || ''}</div></div>`;
+const empty = (title, msg, actions) => `<div class="empty"><h3>${esc(title)}</h3><div>${msg}</div>${actions ? `<div class="actions">${actions}</div>` : ''}</div>`;
+const bars = (items, o) => { o = o || {}; const mx = Math.max(1, ...items.map(i => i.value)); return items.length ? `<div class="bars">${items.map(i => `<div class="bar-row"><span>${esc(i.label)}</span><div class="bar-track" role="img" aria-label="${esc(i.label)}: ${i.value}"><div class="bar-fill${o.dark ? ' k' : ''}" style="width:${(i.value / mx) * 100}%"></div></div><span class="val num">${esc(i.text != null ? i.text : i.value)}</span></div>`).join('')}</div>` : '<div class="muted small">لا توجد بيانات</div>'; };
+
+/* date-range filter component */
+function rangeBars(key, o) {
+  const s = S[key]; o = o || {};
+  return `<div class="filters" data-range="${key}"><div class="fld"><label>الفترة</label><select data-change="range" data-key="${key}" data-k="preset">${opts({ 7: 'آخر 7 أيام', 30: 'آخر 30 يومًا', month: 'هذا الشهر', all: 'كل الفترات', custom: 'نطاق مخصص' }, s.preset)}</select></div>
+  <div class="fld"><label>من</label><input type="date" data-change="range" data-key="${key}" data-k="from" value="${esc(s.from)}"${s.preset === 'custom' ? '' : ' disabled'}></div>
+  <div class="fld"><label>إلى</label><input type="date" data-change="range" data-key="${key}" data-k="to" value="${esc(s.to)}"${s.preset === 'custom' ? '' : ' disabled'}></div>
+  ${isMgr() && o.rep !== false ? `<div class="fld"><label>المندوب</label><select data-change="range" data-key="${key}" data-k="rep"><option value="">كل المندوبين</option>${userOpts(s.rep)}</select></div>` : ''}${o.extra || ''}</div>`;
+}
+function rangeParams(key) {
+  const s = S[key], d = new Date(); let from = '', to = '';
+  if (s.preset === '7' || s.preset === '30') { const a = new Date(d.getTime() - (+s.preset - 1) * 864e5); from = `${a.getFullYear()}-${pad(a.getMonth() + 1)}-${pad(a.getDate())}`; to = todayStr(); }
+  else if (s.preset === 'month') { from = `${d.getFullYear()}-${pad(d.getMonth() + 1)}-01`; to = todayStr(); }
+  else if (s.preset === 'custom') { from = s.from; to = s.to; }
+  return { from, to, assigned_to: s.rep || undefined };
+}
+CHG.range = t => { const s = S[t.dataset.key]; s[t.dataset.k] = t.value; if (t.dataset.k === 'preset' && t.value !== 'custom') { s.from = ''; s.to = ''; } renderView(); };
+
+/* ═════════ Dashboard ═════════ */
+async function viewDashboard(el, my) {
+  const p = rangeParams('dash'); const r = await api('getReports', p); if (stale(my)) return;
+  const kpi = (k, v, d, cls) => `<div class="kpi ${cls || ''}"><div class="k">${esc(k)}</div><div class="v num">${esc(v)}</div><div class="d">${d || ''}</div></div>`;
+  let body;
+  if (r.empty) body = `<div class="card">${empty('لا توجد بيانات بعد', 'ابدأ بإضافة أول عميل أو استيراد ملف CSV. لن تظهر أي أرقام قبل وجود سجلات فعلية.', `<a class="btn primary" href="#/leads">إضافة عملاء</a>${isMgr() ? '<a class="btn" href="#/settings">تحميل بيانات اختبار (تجريبي)</a>' : ''}`)}</div>`;
+  else body = `<div class="grid g-kpi">
+    ${kpi('إجمالي العملاء', r.total_leads, 'غير المؤرشفين، كل الفترات')}
+    ${kpi('عملاء جدد في الفترة', r.new_leads, 'دفعة العملاء (cohort) المضافة في الفترة')}
+    ${kpi('تم التواصل', r.contacted, `معدل التواصل: <b class="num">${P(r.contact_rate)}</b>`)}
+    ${kpi('تسجيلات مؤكدة (من دفعة الفترة)', r.confirmed_cohort, `تسجيلات مؤكدة مؤرخة داخل الفترة من أي دفعة: <b class="num">${r.registrations_in_period}</b>`)}
+    ${kpi('معدل التحويل', P(r.conversion_rate), 'تسجيلات مؤكدة ÷ عملاء الدفعة نفسها × 100')}
+    ${kpi('متابعات متأخرة الآن', r.overdue_followups, 'موعدها قبل الوقت الحالي ولم تُسجَّل بعدها متابعة', r.overdue_followups ? 'alert' : '')}
+    ${kpi('نسبة إنجاز المتابعات', P(r.followup_completion.rate), `${r.followup_completion.completed} من ${r.followup_completion.due} موعد حان وقته`)}
+  </div>
+  <div class="grid g-2" style="margin-top:16px">
+    <div class="card"><h2>التسجيلات المؤكدة حسب المصدر</h2>${bars(r.by_source.map(s => ({ label: s.label, value: s.converted, text: `${s.converted} / ${s.leads}` })))}<p class="hint" style="margin:10px 0 0">كل مصدر: تسجيلات مؤكدة / عملاء الدفعة.</p></div>
+    <div class="card"><h2>معدل التحويل حسب المصدر</h2>${bars(r.by_source.map(s => ({ label: s.label, value: s.rate || 0, text: P(s.rate) })), { dark: true })}</div>
+    ${isMgr() ? `<div class="card"><h2>التسجيلات المؤكدة حسب المندوب</h2>${bars(r.by_rep.filter(x => x.assigned || x.converted).map(x => ({ label: x.name, value: x.converted, text: `${x.converted} / ${x.assigned}` })))}</div>
+    <div class="card"><h2>معدل التحويل حسب المندوب</h2>${bars(r.by_rep.filter(x => x.assigned).map(x => ({ label: x.name, value: x.rate || 0, text: P(x.rate) })), { dark: true })}</div>` : ''}
+    <div class="card"><h2>أسباب عدم التسجيل</h2>${reasonBars(r.non_registration)}</div>
+  </div>`;
+  el.innerHTML = head('لوحة التحكم', isMgr() ? 'نظرة عامة على أداء الفريق' : 'أداؤك الشخصي', '') + `<div class="card" style="margin-bottom:16px">${rangeBars('dash')}${noteBlock(r, true)}</div>` + body;
+}
+function reasonBars(nr) {
+  const items = Object.keys(nr.reasons).filter(k => k !== 'unknown').map(k => ({ label: L.nonreg[k], value: nr.reasons[k] })).sort((a, b) => b.value - a.value);
+  const unk = nr.reasons.unknown || 0;
+  return (items.length ? bars(items) : '<div class="muted small">لا توجد آراء مسجلة بسبب محدد لعملاء الفترة غير المسجلين.</div>') +
+    `<p class="hint" style="margin:10px 0 0">من ${nr.eligible} عميل غير مسجل في الدفعة: <b>${nr.no_feedback}</b> بلا رأي مسجل (لا يُعد سببًا) · <b>${unk}</b> رأي بسبب «غير محدد».</p>`;
+}
+function noteBlock(r, compact) {
+  const per = r.period.all_time ? 'كل الفترات' : `من ${r.period.from ? fmtD(r.period.from) : 'البداية'} إلى ${r.period.to ? fmtD(r.period.to) : 'اليوم'}`;
+  return `<div class="alert-box info" style="margin-top:6px"><b>الفترة:</b> ${esc(per)} · <b>النطاق:</b> ${r.scope === 'all' ? 'كل الفريق' : r.scope === 'rep' ? 'مندوب محدد' : 'عملاؤك فقط'}<br>${r.notes.map(esc).join('<br>')}
+  <details style="margin-top:6px"><summary style="cursor:pointer">تعريفات المؤشرات</summary><ul style="margin:6px 0 0;padding-inline-start:20px">${r.definitions.map(d => `<li>${esc(d)}</li>`).join('')}</ul></details></div>`;
+}
+
+/* ═════════ Leads list ═════════ */
+async function viewLeads(el, my) {
+  const f = S.leads;
+  el.innerHTML = head('العملاء', 'إدارة العملاء المحتملين', `<button class="btn primary" data-act="newLead">+ إضافة عميل</button><button class="btn" data-act="importLeads">استيراد CSV</button><button class="btn" data-act="exportLeads">تصدير CSV</button>`) +
+  `<div class="filters wide"><div class="fld"><label for="lq">بحث بالاسم أو الهاتف</label><input id="lq" type="search" data-input="leadQ" value="${esc(f.q)}" placeholder="اكتب اسمًا أو رقمًا"></div>
+  <div class="fld"><label>الحالة</label><select data-change="leadF" data-k="status"><option value="">الكل</option>${opts(L.lead_status, f.status)}</select></div>
+  ${isMgr() ? `<div class="fld"><label>المسؤول</label><select data-change="leadF" data-k="assigned_to"><option value="">الكل</option>${userOpts(f.assigned_to)}</select></div>` : ''}
+  <div class="fld"><label>الاهتمام</label><select data-change="leadF" data-k="interest"><option value="">الكل</option>${opts(L.interest, f.interest)}</select></div>
+  <div class="fld"><label>الدورة</label><select data-change="leadF" data-k="course"><option value="">الكل</option>${courseOpts(f.course).replace('<option value="">— بدون —</option>', '')}</select></div>
+  <div class="fld"><label>المصدر</label><select data-change="leadF" data-k="source"><option value="">الكل</option>${opts(L.source, f.source)}</select></div>
+  <div class="fld"><label>من تاريخ</label><input type="date" data-change="leadF" data-k="from" value="${esc(f.from)}"></div>
+  <div class="fld"><label>إلى تاريخ</label><input type="date" data-change="leadF" data-k="to" value="${esc(f.to)}"></div>
+  <div class="fld"><label>خيارات</label><label style="font-weight:400"><input type="checkbox" data-change="leadChk" data-k="overdue"${f.overdue ? ' checked' : ''}> متابعة متأخرة فقط</label>${isMgr() ? `<label style="font-weight:400"><input type="checkbox" data-change="leadChk" data-k="archived"${f.archived ? ' checked' : ''}> المؤرشفون فقط</label>` : ''}</div></div>
+  <div id="lead-results">${loading}</div>`;
+  await loadLeadResults(my);
+}
+let qTimer; INP.leadQ = t => { clearTimeout(qTimer); qTimer = setTimeout(() => { S.leads.q = t.value; S.leads.page = 1; loadLeadResults(); }, 300); };
+CHG.leadF = t => { S.leads[t.dataset.k] = t.value; S.leads.page = 1; loadLeadResults(); };
+CHG.leadChk = t => { S.leads[t.dataset.k] = t.checked; S.leads.page = 1; loadLeadResults(); };
+function leadParams() { const f = S.leads; return { q: f.q, status: f.status, assigned_to: f.assigned_to, interest: f.interest, course: f.course, source: f.source, from: f.from, to: f.to, overdue: f.overdue, sort: f.sort, dir: f.dir, page: f.page, page_size: 20, include_archived: f.archived, only_archived: f.archived }; }
+const statusOpts = l => { const cur = l.lead_status; const allowed = cur === 'converted' ? [] : N.TRANSITIONS[cur] || []; return [cur].concat(allowed).map(k => `<option value="${k}"${k === cur ? ' selected' : ''}>${esc(L.lead_status[k])}</option>`).join(''); };
+async function loadLeadResults(my) {
+  const box = $('#lead-results'); if (!box) return; const myNav = S.nav;
+  let res; try { res = await api('listLeads', leadParams()); } catch (e) { if (e.code === 'AUTH' || e.code === 'INACTIVE') return forceLogout(e.message); box.innerHTML = `<div class="alert-box err" role="alert">${esc(e.message)}</div>`; return; }
+  if (myNav !== S.nav || !$('#lead-results')) return;
+  const f = S.leads; const th = (k, t) => `<th><button data-act="sort" data-k="${k}" aria-label="ترتيب حسب ${t}">${t}${f.sort === k ? (f.dir === 'asc' ? ' ▲' : ' ▼') : ''}</button></th>`;
+  const anyFilter = f.q || f.status || f.assigned_to || f.interest || f.course || f.source || f.from || f.to || f.overdue;
+  if (!res.total) { box.innerHTML = `<div class="card">${anyFilter ? empty('لا توجد نتائج مطابقة', 'غيّر البحث أو الفلاتر.', '<button class="btn" data-act="clearFilters">مسح الفلاتر</button>') : empty('لا يوجد عملاء بعد', 'أضف أول عميل أو استورد ملف CSV.', '<button class="btn primary" data-act="newLead">+ إضافة عميل</button><button class="btn" data-act="importLeads">استيراد CSV</button>')}</div>`; return; }
+  const pages = Math.ceil(res.total / res.page_size);
+  box.innerHTML = `<div class="tbl-wrap"><table><thead><tr>${th('full_name', 'العميل')}${th('lead_status', 'الحالة')}${th('interest_level', 'الاهتمام')}<th>الدورة / المصدر</th><th>المسؤول</th>${th('next_follow_up_at', 'المتابعة القادمة')}${th('created_at', 'أُضيف')}<th></th></tr></thead><tbody>
+  ${res.rows.map(l => `<tr><td class="cell-name"><b><a href="#/lead/${l.id}" style="color:inherit">${esc(l.full_name)}</a></b>${phoneCell(l)}${l.archived_at ? ' ' + tag('lost', 'مؤرشف') : ''}</td>
+  <td>${l.archived_at ? tag(l.lead_status, L.lead_status[l.lead_status]) : `<select data-change="quickStatus" data-id="${l.id}" data-v="${l.version}" aria-label="تغيير حالة ${esc(l.full_name)}">${statusOpts(l)}</select>`}</td>
+  <td>${tag(l.interest_level, L.interest[l.interest_level])}</td><td>${esc(l.course_interest || '—')}<div class="small muted">${esc(L.source[l.lead_source])}</div></td><td>${esc(l.assigned_to_name)}</td>
+  <td class="${l.is_overdue ? 'over' : ''}">${l.next_follow_up_at ? fmtDT(l.next_follow_up_at) + (l.is_overdue ? ' · متأخرة' : '') : (N.ACTIVE_FOLLOW.includes(l.lead_status) ? '<span class="muted">غير محدد</span>' : '—')}</td><td class="nowrap small">${fmtD(l.created_at)}</td>
+  <td><a class="btn sm" href="#/lead/${l.id}">فتح</a></td></tr>`).join('')}</tbody></table></div>
+  <div class="pager"><span class="muted small">${res.total} عميل · صفحة ${res.page} من ${pages}</span><span class="actions"><button class="btn sm" data-act="page" data-p="${res.page - 1}"${res.page <= 1 ? ' disabled' : ''}>السابق</button><button class="btn sm" data-act="page" data-p="${res.page + 1}"${res.page >= pages ? ' disabled' : ''}>التالي</button></span></div>`;
+}
+ACT.sort = t => { const f = S.leads; if (f.sort === t.dataset.k) f.dir = f.dir === 'asc' ? 'desc' : 'asc'; else { f.sort = t.dataset.k; f.dir = 'asc'; } loadLeadResults(); };
+ACT.page = t => { S.leads.page = +t.dataset.p; loadLeadResults(); };
+ACT.clearFilters = () => { Object.assign(S.leads, { q: '', status: '', assigned_to: '', interest: '', course: '', source: '', from: '', to: '', overdue: false, page: 1 }); renderView(); };
+CHG.quickStatus = async t => {
+  const to = t.value, prevHtml = t.innerHTML;
+  const revert = () => loadLeadResults();
+  if (to === 'lost') {
+    const d = openModal('تسجيل خسارة العميل', formShell('lostReason', `<input type="hidden" name="id" value="${t.dataset.id}"><input type="hidden" name="v" value="${t.dataset.v}">${fld('سبب الخسارة', 'lost_reason', txt('lost_reason', ''), { req: true, full: true })}`, { submit: 'تأكيد الخسارة' }), { sm: true });
+    d.addEventListener('close', revert); return;
+  }
+  try { await api('updateLead', { id: t.dataset.id, expected_version: +t.dataset.v, patch: { lead_status: to } }); toast('تم تحديث الحالة'); } catch (e) { fail(e); }
+  loadLeadResults(); refreshBadge();
+};
+FORM.signin = async f => { const d = formData(f); try { await REMOTE.signIn(d.email, d.password); S.token = 'remote'; await loadBootstrap(); } catch (e) { e.code = e.code === 'NETWORK' ? 'NETWORK' : 'SIGNIN_FAIL'; throw e; } if (!location.hash || location.hash === '#/') location.hash = '#/dashboard'; renderShell(); };
+FORM.lostReason = async f => { const d = formData(f); await api('updateLead', { id: d.id, expected_version: +d.v, patch: { lead_status: 'lost', lost_reason: d.lost_reason } }); toast('تم تسجيل الخسارة'); f.closest('dialog').close(); if (S.route.name === 'lead') renderView(); };
+
+/* lead form */
+function leadFields(l, create) {
+  l = l || {};
+  return `<div class="form-grid">
+  ${fld('الاسم الكامل', 'full_name', inp('full_name', { value: l.full_name, req: true }), { req: true })}
+  ${fld('رقم الهاتف', 'phone', inp('phone', { type: 'tel', value: l.phone, req: true, ph: '01012345678' }), { req: true, hint: 'يقبل الصيغ المصرية والدولية (مع +)' })}
+  ${fld('البريد الإلكتروني', 'email', inp('email', { type: 'email', value: l.email }))}
+  ${fld('المحافظة', 'governorate', inp('governorate', { value: l.governorate, list: 'govs' }))}
+  ${fld('نمط التعلم المفضل', 'preferred_learning_mode', sel('preferred_learning_mode', opts(L.mode, l.preferred_learning_mode || 'undecided')))}
+  ${fld('الدورة المهتم بها', 'course_interest', sel('course_interest', courseOpts(l.course_interest)))}
+  ${fld('مصدر العميل', 'lead_source', sel('lead_source', opts(L.source, l.lead_source || 'meta_ads')))}
+  ${fld('اسم الحملة', 'campaign_name', inp('campaign_name', { value: l.campaign_name }))}
+  ${fld('اسم الإعلان', 'ad_name', inp('ad_name', { value: l.ad_name }))}
+  ${fld('مستوى الاهتمام', 'interest_level', sel('interest_level', opts(L.interest, l.interest_level || 'unknown')))}
+  ${create && isMgr() ? fld('المسؤول عن العميل', 'assigned_to', sel('assigned_to', userOpts(S.me.id, true))) : ''}
+  ${fld('موعد المتابعة القادمة', 'next_follow_up_at', inp('next_follow_up_at', { type: 'datetime-local', value: l.next_follow_up_at ? toLocalInput(l.next_follow_up_at) : '' }))}
+  ${fld('ملاحظات عامة', 'general_notes', txt('general_notes', l.general_notes), { full: true })}</div><datalist id="govs">${N.GOVERNORATES.map(g => `<option value="${g}">`).join('')}</datalist>`;
+}
+ACT.newLead = () => {
+  openModal('إضافة عميل', formShell('createLead', `<input type="hidden" name="request_id" value="${N.uuid()}">${leadFields(null, true)}
+  <div data-dup style="display:none;margin-top:12px"><div class="alert-box warn" data-dup-msg></div>${isMgr() ? `<div class="form-grid" style="margin-top:10px">${fld('سبب إضافة الرقم المكرر', 'duplicate_reason', inp('duplicate_reason'), { full: true, hint: 'مطلوب. يُسجَّل في سجل التغييرات.' })}<label class="fld full" style="font-weight:400;flex-direction:row;gap:8px"><input type="checkbox" name="allow_duplicate" style="width:auto;min-height:0"> أؤكد أن هذا عميل مختلف وأريد إضافته رغم التكرار</label></div>` : ''}</div>`, { submit: 'إضافة العميل' }));
+};
+FORM.createLead = async f => {
+  const d = formData(f), allow = !!$('[name=allow_duplicate]', f) && $('[name=allow_duplicate]', f).checked;
+  const data = {}; ['full_name', 'phone', 'email', 'governorate', 'preferred_learning_mode', 'course_interest', 'lead_source', 'campaign_name', 'ad_name', 'interest_level', 'assigned_to', 'next_follow_up_at', 'general_notes'].forEach(k => { if (d[k] !== undefined) data[k] = d[k]; });
+  try { const l = await api('createLead', { request_id: d.request_id, data, allow_duplicate: allow, duplicate_reason: d.duplicate_reason }); toast('تمت إضافة العميل'); f.closest('dialog').close(); location.hash = '#/lead/' + l.id; }
+  catch (e) {
+    if (e.code === 'DUPLICATE') { const box = $('[data-dup]', f); box.style.display = ''; $('[data-dup-msg]', f).innerHTML = '<b>رقم مكرر:</b> هذا الرقم موجود لدى: ' + e.duplicates.map(x => `<a href="#/lead/${x.id}">${esc(x.full_name)}</a> (${esc(L.lead_status[x.lead_status])} · ${esc(x.assigned_to_name)}${x.archived ? ' · مؤرشف' : ''})`).join('، ') + '. لا يتم دمج السجلات تلقائيًا.'; e.message = 'تحذير: الرقم مسجل بالفعل. راجع السجل المطابق أو أكّد الإضافة رغم التكرار.'; }
+    if (e.code === 'DUPLICATE_BLOCKED') { const box = $('[data-dup]', f); box.style.display = ''; $('[data-dup-msg]', f).textContent = 'هذا الرقم مسجل بالفعل في النظام. لا يمكنك إضافته مرة أخرى؛ اطلب من المدير مراجعة التعارض.'; }
+    throw e;
+  }
+};
+
+/* export / import / download */
+async function saveFile(filename, data) {
+  let dl = null; try { dl = window.claude && window.claude.use ? await window.claude.use('downloads') : null; } catch (e) { dl = null; }
+  if (!dl) { const d = openModal('نسخ محتوى الملف', `<div class="alert-box warn">التنزيل المباشر غير متاح في هذا العرض. انسخ النص أدناه واحفظه في ملف باسم <span class="num">${esc(filename)}</span> بترميز UTF-8.</div><textarea style="margin-top:10px;min-height:260px;direction:ltr" readonly>${esc(data)}</textarea>`); $('textarea', d).select(); return; }
+  try { const r = await dl.save({ filename, data }); if (r.status === 'saved') toast('تم حفظ الملف'); } catch (e) { if (e && e.code === 'declined') toast('تم إلغاء الحفظ'); else toast('تعذر حفظ الملف: ' + ((e && e.message) || ''), 'err'); }
+}
+ACT.exportLeads = async () => { const r = await api('exportLeads', leadParams()); if (!r.count) { toast('لا توجد سجلات للتصدير ضمن الفلاتر الحالية', 'err'); return; } await saveFile(r.filename, r.csv); };
+const IMP_FIELDS = { '': '— تجاهل —', full_name: 'الاسم', phone: 'الهاتف', email: 'البريد', governorate: 'المحافظة', preferred_learning_mode: 'نمط التعلم', course_interest: 'الدورة', lead_source: 'المصدر', campaign_name: 'الحملة', ad_name: 'الإعلان', general_notes: 'ملاحظات' };
+function guessField(h) {
+  const x = N.normText(h);
+  const m = [[/اسم|name/, 'full_name'], [/هاتف|موبايل|تليفون|جوال|phone|mobile|tel|رقم/, 'phone'], [/ايميل|بريد|email|mail/, 'email'], [/محافظ|مدينه|city|governorate/, 'governorate'], [/نمط|حضور|اونلاين|mode/, 'preferred_learning_mode'], [/دور|course|كورس/, 'course_interest'], [/مصدر|source/, 'lead_source'], [/حمل|campaign/, 'campaign_name'], [/اعلان|\bad\b/, 'ad_name'], [/ملاحظ|note|comment/, 'general_notes']];
+  const f = m.find(p => p[0].test(x)); return f ? f[1] : '';
+}
+const IMP = { rows: [], headers: [], map: [] };
+ACT.importLeads = () => { IMP.rows = []; IMP.headers = []; IMP.map = []; const d = openModal('استيراد عملاء من CSV', ''); d.id = 'imp'; impStep1(d); };
+function impStep1(d) {
+  $('.dlg-body', d).innerHTML = `<ol class="small muted" style="margin:0 0 10px;padding-inline-start:18px"><li>اختر الملف أو الصق المحتوى</li><li>طابق الأعمدة وراجع المعاينة</li><li>اعتمد الاستيراد</li></ol>
+  <div class="fld"><label for="impf">ملف CSV (ترميز UTF-8)</label><input id="impf" type="file" accept=".csv,text/csv,.txt" data-change="impFile"></div>
+  <div class="fld" style="margin-top:10px"><label for="impt">أو الصق المحتوى هنا</label><textarea id="impt" style="min-height:130px;direction:ltr" placeholder="name,phone&#10;أحمد,01012345678"></textarea></div>
+  <div class="form-err" id="imp-err"></div><div class="form-foot"><button class="btn primary" data-act="impRead">متابعة</button><button class="btn" data-act="closeModal">إلغاء</button></div>`;
+}
+CHG.impFile = t => { const file = t.files && t.files[0]; if (!file) return; if (file.size > 3e6) { $('#imp-err').innerHTML = '<div class="alert-box err">الملف كبير (الحد 3 ميجابايت)</div>'; return; } const r = new FileReader(); r.onload = () => { $('#impt').value = String(r.result); }; r.onerror = () => { $('#imp-err').innerHTML = '<div class="alert-box err">تعذرت قراءة الملف</div>'; }; r.readAsText(file, 'utf-8'); };
+ACT.impRead = () => {
+  const rows = N.parseCSV($('#impt').value); const er = $('#imp-err');
+  if (rows.length < 2) { er.innerHTML = '<div class="alert-box err" role="alert">لم يتم العثور على صفوف. يجب أن يحتوي الملف على صف عناوين وصف بيانات على الأقل.</div>'; return; }
+  if (rows.length > 1001) { er.innerHTML = '<div class="alert-box err" role="alert">الحد الأقصى 1000 صف في المرة الواحدة.</div>'; return; }
+  IMP.headers = rows[0]; IMP.rows = rows.slice(1); IMP.map = IMP.headers.map(guessField); impStep2($('#imp'));
+};
+function impStep2(d, prev) {
+  $('.dlg-body', d).innerHTML = `<p class="small muted" style="margin-top:0">تم العثور على <b>${IMP.rows.length}</b> صف. طابق كل عمود بحقل في النظام (الاسم والهاتف مطلوبان).</p>
+  <div class="tbl-wrap"><table><thead><tr><th>عمود الملف</th><th>مثال</th><th>الحقل</th></tr></thead><tbody>${IMP.headers.map((h, i) => `<tr><td>${esc(h)}</td><td class="small muted">${esc((IMP.rows[0] || [])[i] || '')}</td><td><select data-change="impMap" data-i="${i}">${opts(IMP_FIELDS, IMP.map[i])}</select></td></tr>`).join('')}</tbody></table></div>
+  ${isMgr() ? `<div class="fld" style="margin-top:12px"><label>إسناد العملاء المستوردين إلى</label><select id="imp-as">${userOpts(S.me.id, true)}</select></div>` : '<p class="hint">سيُسند العملاء المستوردون إليك.</p>'}
+  <div id="imp-prev" style="margin-top:14px">${prev || ''}</div><div class="form-err" id="imp-err"></div>
+  <div class="form-foot"><button class="btn primary" data-act="impPreview">معاينة وفحص</button>${prev ? '<button class="btn dark" data-act="impCommit" id="imp-commit">اعتماد الاستيراد</button>' : ''}<button class="btn" data-act="closeModal">إغلاق</button></div>`;
+}
+CHG.impMap = t => { IMP.map[+t.dataset.i] = t.value; };
+function impRows() { return IMP.rows.map(r => { const o = {}; IMP.map.forEach((k, i) => { if (k) o[k] = r[i]; }); return o; }); }
+function impCall(commit) { return api('importLeads', { rows: impRows(), commit, default_assignee: $('#imp-as') ? $('#imp-as').value : undefined }); }
+ACT.impPreview = async () => {
+  const er = $('#imp-err'); if (!IMP.map.includes('full_name') || !IMP.map.includes('phone')) { er.innerHTML = '<div class="alert-box err" role="alert">طابق عمودًا للاسم وعمودًا للهاتف على الأقل.</div>'; return; }
+  const as = $('#imp-as') ? $('#imp-as').value : null;
+  let res; try { res = await impCall(false); } catch (e) { er.innerHTML = `<div class="alert-box err" role="alert">${esc(e.message)}</div>`; return; }
+  const s = res.summary, ST_AR = { ok: 'صالح', invalid: 'مرفوض', duplicate_db: 'مكرر بالنظام', duplicate_file: 'مكرر بالملف' };
+  const html = `<div class="alert-box ${s.ok ? 'info' : 'warn'}"><b>نتيجة الفحص:</b> ${s.total} صف · صالح <b>${s.ok}</b> · مرفوض <b>${s.invalid}</b> · مكرر بالنظام <b>${s.duplicate_db}</b> · مكرر بالملف <b>${s.duplicate_file}</b>. الصفوف غير الصالحة والمكررة لن تُستورد ولا تُدمج تلقائيًا.</div>
+  <div class="tbl-wrap" style="margin-top:8px;max-height:260px;overflow:auto"><table><thead><tr><th>#</th><th>الاسم</th><th>الهاتف</th><th>الحالة</th><th>ملاحظات</th></tr></thead><tbody>${res.rows.slice(0, 200).map(r => `<tr><td>${r.index}</td><td>${esc(r.name)}</td><td>${num(r.phone)}</td><td>${tag(r.status === 'ok' ? 'converted' : 'lost', ST_AR[r.status])}</td><td class="small">${esc(r.errors.concat(r.warnings).join(' · '))}</td></tr>`).join('')}</tbody></table></div>${res.rows.length > 200 ? '<p class="hint">تُعرض أول 200 صف فقط في المعاينة.</p>' : ''}`;
+  impStep2($('#imp'), html); if ($('#imp-as') && as) $('#imp-as').value = as; if (!s.ok) { const b = $('#imp-commit'); if (b) b.remove(); }
+};
+ACT.impCommit = async () => {
+  if (!await confirmBox({ title: 'اعتماد الاستيراد', msg: 'سيتم إنشاء العملاء الصالحين فقط. هل تريد المتابعة؟', ok: 'استيراد' })) return;
+  const er = $('#imp-err'), b = $('#imp-commit'); if (b) { b.disabled = true; b.textContent = 'جارٍ الاستيراد…'; }
+  try {
+    const res = await impCall(true); const s = res.summary;
+    $('.dlg-body', $('#imp')).innerHTML = `<div class="alert-box ok" role="status"><b>اكتمل الاستيراد.</b><br>تم استيراد <b>${s.imported}</b> عميل من ${s.total} صف · مرفوض ${s.invalid} · مكرر ${s.duplicate_db + s.duplicate_file}.</div><div class="form-foot"><button class="btn primary" data-act="closeModal">إغلاق</button></div>`;
+    if (S.route.name === 'leads') loadLeadResults();
+  } catch (e) { if (b) { b.disabled = false; b.textContent = 'اعتماد الاستيراد'; } er.innerHTML = `<div class="alert-box err" role="alert">${esc(e.message)}</div>`; }
+};
+
+/* ═════════ Lead profile ═════════ */
+async function viewLead(el, my) {
+  const id = S.route.id; const tab = S.route.tab || 'overview'; S.leadTab = tab;
+  const g = await api('getLead', { id }); if (stale(my)) return;
+  const l = g.lead; S.cur = g;
+  const tabs = [['overview', 'نظرة عامة'], ['followups', 'سجل المتابعات', g.follow_ups.length], ['feedback', 'سجل الآراء', g.feedback.length], ['registration', 'الاشتراك والدفع', g.enrollments.length]].concat(g.audit ? [['audit', 'سجل التغييرات', g.audit.length]] : []);
+  el.innerHTML = `<div class="card"><div class="lead-head"><div><a href="#/leads" class="small">← كل العملاء</a><h1 style="margin-top:4px">${esc(l.full_name)} ${tag(l.lead_status, L.lead_status[l.lead_status])} ${tag(l.interest_level, 'اهتمام ' + L.interest[l.interest_level])}${l.archived_at ? ' ' + tag('lost', 'مؤرشف') : ''}</h1>
+  <div style="margin-top:4px">${phoneCell(l)} ${l.email ? `<span class="muted small"> · ${esc(l.email)}</span>` : ''}</div></div>
+  <div class="actions">${l.archived_at ? '' : `<button class="btn primary" data-act="addFollowUp">تسجيل متابعة</button><a class="btn" target="_blank" rel="noopener" href="https://wa.me/${esc(l.normalized_phone.replace(/\D/g, ''))}">فتح واتساب</a><button class="btn" data-act="copyMsg">نسخ رسالة جاهزة</button>`}${isMgr() ? `${l.archived_at ? '' : '<button class="btn" data-act="reassign">إعادة إسناد</button>'}<button class="btn danger" data-act="archive" data-restore="${l.archived_at ? 1 : ''}">${l.archived_at ? 'استعادة من الأرشيف' : 'أرشفة'}</button>` : ''}</div></div>
+  <div class="pills"><div class="pill"><span>المسؤول</span><b>${esc(l.assigned_to_name)}</b></div>
+  <div class="pill ${l.is_overdue ? 'hot' : ''}"><span>المتابعة القادمة</span><b class="${l.is_overdue ? 'over' : ''}">${l.next_follow_up_at ? fmtDT(l.next_follow_up_at) + (l.is_overdue ? ' · متأخرة' : '') : 'غير محددة'}</b></div>
+  <div class="pill"><span>آخر تواصل</span><b>${fmtDT(l.last_contact_at)}</b></div><div class="pill"><span>أول تواصل فعلي</span><b>${fmtDT(l.first_contact_at)}</b></div><div class="pill"><span>أُضيف</span><b>${fmtD(l.created_at)}</b></div></div></div>
+  <div class="tabs" role="tablist" style="margin-top:16px">${tabs.map(t => `<button role="tab" aria-selected="${t[0] === tab}" data-act="leadTab" data-t="${t[0]}">${esc(t[1])}${t[2] != null ? `<span class="cnt">${t[2]}</span>` : ''}</button>`).join('')}</div><div id="lead-tab"></div>`;
+  renderLeadTab(tab);
+}
+ACT.leadTab = t => { history.replaceState(null, '', `#/lead/${S.route.id}/${t.dataset.t}`); S.route.tab = t.dataset.t; $$('.tabs [role=tab]').forEach(b => b.setAttribute('aria-selected', b === t)); renderLeadTab(t.dataset.t); };
+function renderLeadTab(tab) {
+  const g = S.cur, l = g.lead, box = $('#lead-tab'); if (!box) return;
+  if (tab === 'overview') {
+    const ro = !!l.archived_at;
+    box.innerHTML = `<div class="card"><h2>بيانات العميل</h2><form data-form="editLead" novalidate><input type="hidden" name="id" value="${l.id}"><input type="hidden" name="version" value="${l.version}">${leadFields(l, false)}
+    <div class="form-grid" style="margin-top:12px">${l.lead_status === 'converted' ? `<div class="fld"><label>حالة العميل</label><div>${tag('converted', 'تم التسجيل')}<div class="hint">مرتبطة باشتراك مؤكد ولا تُعدَّل يدويًا.</div></div></div>` : fld('حالة العميل', 'lead_status', sel('lead_status', statusOpts(l)))}
+    ${fld('سبب الخسارة', 'lost_reason', inp('lost_reason', { value: l.lost_reason }), { hint: 'مطلوب عند اختيار «خسارة»' })}</div>
+    <div class="form-err"></div><div class="form-foot">${ro ? '<span class="muted">العميل مؤرشف — استعده لتعديله.</span>' : '<button type="submit" class="btn primary">حفظ التعديلات</button>'}${!ro && (l.lead_status === 'nurture' || l.lead_status === 'lost') ? '<button type="button" class="btn" data-act="reactivate">إعادة إلى المتابعة النشطة</button>' : ''}</div></form></div>`;
+    if (ro) $$('input,select,textarea', box).forEach(x => { x.disabled = true; });
+  } else if (tab === 'followups') {
+    box.innerHTML = (l.archived_at ? '' : `<div class="card"><h2>تسجيل تواصل جديد</h2>${followUpForm(l)}</div>`) + `<div class="card"><h2>سجل المتابعات (لا يُحذف ولا يُعدَّل)</h2>${g.follow_ups.length ? `<ul class="timeline">${g.follow_ups.map(x => `<li><div class="tl-head"><b style="color:var(--ink)">${esc(L.interaction[x.interaction_type])}</b>${tag(x.outcome === 'not_interested' ? 'lost' : x.outcome === 'ready_to_register' ? 'converted' : 'pending', L.outcome[x.outcome])}<span>${fmtDT(x.interaction_at)}</span><span>· ${esc(x.created_by_name)}</span></div><div class="tl-body">${esc(x.notes)}${x.customer_response ? `<div class="small muted">رد العميل: ${esc(x.customer_response)}</div>` : ''}${x.next_follow_up_at ? `<div class="small">المتابعة التالية المحددة: ${fmtDT(x.next_follow_up_at)}</div>` : ''}</div></li>`).join('')}</ul>` : empty('لا توجد متابعات مسجلة', 'سجّل أول تواصل مع هذا العميل.')}</div>`;
+  } else if (tab === 'feedback') {
+    box.innerHTML = (l.archived_at ? '' : `<div class="card"><h2>تسجيل رأي العميل</h2>${feedbackForm()}</div>`) + `<div class="card"><h2>سجل الآراء</h2>${g.feedback.length ? `<ul class="timeline">${g.feedback.map(x => `<li><div class="tl-head"><b style="color:var(--ink)">${fmtDT(x.recorded_at)}</b><span>· ${esc(x.recorded_by_name)}</span>${tag(x.interest_level, 'اهتمام ' + L.interest[x.interest_level])}</div><div class="tl-body small">اعتراض السعر: ${esc(L.price_obj[x.price_objection])} · نمط التعلم: ${esc(L.mode_obj[x.learning_mode_objection])} · سبب عدم التسجيل: ${esc(L.nonreg[x.non_registration_reason])}${x.customer_feedback ? `<div style="font-size:14px;margin-top:3px">${esc(x.customer_feedback)}</div>` : ''}${x.suggested_action ? `<div class="muted">الإجراء المقترح: ${esc(x.suggested_action)}</div>` : ''}</div></li>`).join('')}</ul>` : empty('لا توجد آراء مسجلة', 'غياب الرأي لا يُعتبر سببًا لعدم التسجيل.')}</div>`;
+  } else if (tab === 'registration') {
+    box.innerHTML = `<div class="card"><h2>الاشتراكات</h2>${g.enrollments.length ? g.enrollments.map(enrCard).join('') : empty('لا توجد اشتراكات', 'لا يتحول العميل إلى «تم التسجيل» إلا بتأكيد اشتراك.')}</div>${l.archived_at ? '' : `<div class="card"><h2>اشتراك جديد</h2>${enrollForm({ lead_id: l.id })}</div>`}`;
+  } else if (tab === 'audit' && g.audit) {
+    box.innerHTML = `<div class="card"><h2>سجل التغييرات لهذا العميل</h2>${g.audit.length ? auditTable(g.audit) : empty('لا توجد سجلات', '')}</div>`;
+  }
+}
+FORM.editLead = async f => {
+  const d = formData(f), patch = {}; ['full_name', 'phone', 'email', 'governorate', 'preferred_learning_mode', 'course_interest', 'lead_source', 'campaign_name', 'ad_name', 'interest_level', 'next_follow_up_at', 'general_notes', 'lead_status', 'lost_reason'].forEach(k => { if (d[k] !== undefined) patch[k] = d[k]; });
+  if (patch.lead_status === S.cur.lead.lead_status) delete patch.lead_status;
+  const o = S.cur.lead; if (patch.next_follow_up_at === (o.next_follow_up_at ? toLocalInput(o.next_follow_up_at) : '')) delete patch.next_follow_up_at;
+  if (patch.lost_reason !== undefined && S.cur.lead.lead_status !== 'lost' && patch.lead_status !== 'lost') delete patch.lost_reason;
+  await api('updateLead', { id: d.id, expected_version: +d.version, patch }); toast('تم حفظ التعديلات'); renderView();
+};
+ACT.reactivate = async () => { const l = S.cur.lead; await api('updateLead', { id: l.id, expected_version: l.version, patch: { lead_status: 'follow_up' } }); toast('أُعيد العميل إلى المتابعة النشطة. سجلاته السابقة محفوظة'); renderView(); };
+ACT.archive = async t => {
+  const l = S.cur.lead, restore = !!t.dataset.restore;
+  if (!await confirmBox({ title: restore ? 'استعادة العميل' : 'أرشفة العميل', msg: restore ? 'سيعود العميل إلى القوائم.' : 'سيختفي العميل من القوائم والتقارير مع حفظ كل سجلاته. يمكن استعادته لاحقًا.', ok: restore ? 'استعادة' : 'أرشفة', danger: !restore })) return;
+  await api('archiveLead', { id: l.id, restore }); toast(restore ? 'تمت الاستعادة' : 'تمت الأرشفة'); renderView();
+};
+ACT.reassign = () => {
+  const l = S.cur.lead;
+  openModal('إعادة إسناد العميل', formShell('reassign', `<input type="hidden" name="id" value="${l.id}"><input type="hidden" name="version" value="${l.version}"><p class="small muted" style="margin-top:0">المسؤول الحالي: ${esc(l.assigned_to_name)}. سيفقد المندوب السابق الوصول إلى هذا العميل.</p>${fld('المسؤول الجديد', 'assigned_to', sel('assigned_to', userOpts(l.assigned_to, true)))}`, { submit: 'إعادة الإسناد' }), { sm: true });
+};
+FORM.reassign = async f => { const d = formData(f); await api('assignLead', { id: d.id, assigned_to: d.assigned_to, expected_version: +d.version }); toast('تمت إعادة الإسناد'); f.closest('dialog').close(); renderView(); };
+ACT.copyMsg = () => {
+  const l = S.cur.lead, first = l.full_name.split(' ')[0];
+  const d = openModal('رسالة جاهزة للنسخ', `<div class="alert-box info">هذا النص للنسخ فقط — النظام <b>لا يرسل</b> أي رسالة. بعد إرسالها يدويًا سجّل التواصل في ملف العميل.</div><div class="fld" style="margin-top:10px"><label for="cm">نص الرسالة (قابل للتعديل)</label><textarea id="cm" style="min-height:150px">السلام عليكم ${first}،\nمعاك ${S.me.full_name} من NOVA FOR MARKETING.\nبخصوص استفسارك عن ${l.course_interest || 'دوراتنا'} — حابب أعرفك بالتفاصيل ومواعيد البدء. يناسبك نتكلم إمتى؟</textarea></div><div class="form-foot"><button class="btn primary" data-act="doCopy">نسخ النص</button><button class="btn" data-act="closeModal">إغلاق</button></div>`);
+  $('textarea', d).focus();
+};
+ACT.doCopy = async t => { const ta = $('#cm'); try { await navigator.clipboard.writeText(ta.value); toast('تم نسخ النص'); } catch (e) { ta.focus(); ta.select(); toast('تعذر النسخ تلقائيًا. النص محدد — انسخه يدويًا (Ctrl+C)', 'err'); } };
+
+/* follow-up form */
+const STATUS_HINT = { ready_to_register: 'registration_pending', interested: 'interested' };
+function followUpForm(l) {
+  const allowed = (N.TRANSITIONS[l.lead_status] || []).filter(s => s !== 'lost');
+  return formShell('followUp', `<input type="hidden" name="request_id" value="${N.uuid()}"><input type="hidden" name="lead_id" value="${l.id}"><input type="hidden" name="cur_status" value="${l.lead_status}"><div class="form-grid">
+  ${fld('نوع التواصل', 'interaction_type', sel('interaction_type', opts(L.interaction, 'whatsapp')))}
+  ${fld('وقت التواصل', 'interaction_at', inp('interaction_at', { type: 'datetime-local', value: toLocalInput(new Date()) }))}
+  ${fld('نتيجة التواصل', 'outcome', sel('outcome', '<option value="">— اختر —</option>' + opts(L.outcome, ''), ' data-change="fuOutcome" required'), { req: true })}
+  ${fld('تحديث حالة العميل', 'set_status', sel('set_status', '<option value="">بدون تغيير (' + esc(L.lead_status[l.lead_status]) + ')</option>' + allowed.map(s => `<option value="${s}">${esc(L.lead_status[s])}</option>`).join('')), { hint: 'للخسارة استخدم تعديل العميل لتسجيل السبب' })}
+  ${fld('رد العميل', 'customer_response', txt('customer_response', ''), { full: true })}
+  ${fld('ملخص التواصل', 'notes', txt('notes', '', ' required'), { req: true, full: true })}
+  ${fld('موعد المتابعة القادمة', 'next_follow_up_at', inp('next_follow_up_at', { type: 'datetime-local' }), { hint: 'اتركه فارغًا إن لم تُحدَّد متابعة (سيظهر العميل في «يحتاج انتباه»)' })}
+  <div class="fld"><label>اختصارات الموعد</label><div class="actions"><button type="button" class="btn sm" data-act="presetNext" data-d="1">غدًا</button><button type="button" class="btn sm" data-act="presetNext" data-d="3">بعد 3 أيام</button><button type="button" class="btn sm" data-act="presetNext" data-d="7">بعد أسبوع</button></div></div></div>`, { submit: 'حفظ المتابعة', cancel: false });
+}
+CHG.fuOutcome = t => {
+  const f = t.closest('form'), cur = $('[name=cur_status]', f).value, s = $('[name=set_status]', f); let sug = STATUS_HINT[t.value] || '';
+  if (!sug && ['replied', 'requested_time', 'objected_to_price', 'requested_details'].includes(t.value)) sug = cur === 'new' ? 'contacted' : '';
+  if (sug === cur) sug = ''; if ([...s.options].some(o => o.value === sug)) s.value = sug;
+};
+ACT.presetNext = t => { const f = t.closest('form'), d = new Date(); d.setDate(d.getDate() + +t.dataset.d); d.setHours(11, 0, 0, 0); $('[name=next_follow_up_at]', f).value = toLocalInput(d); };
+FORM.followUp = async f => {
+  const d = formData(f);
+  await api('recordFollowUp', { request_id: d.request_id, lead_id: d.lead_id, data: { interaction_type: d.interaction_type, interaction_at: d.interaction_at, outcome: d.outcome, set_status: d.set_status, customer_response: d.customer_response, notes: d.notes, next_follow_up_at: d.next_follow_up_at } });
+  toast('تم حفظ المتابعة وأُضيفت إلى السجل'); const dlg = f.closest('dialog'); if (dlg) dlg.close();
+  if (S.route.name === 'lead') { S.route.tab = 'followups'; history.replaceState(null, '', `#/lead/${S.route.id}/followups`); } renderView();
+};
+ACT.addFollowUp = () => { history.replaceState(null, '', `#/lead/${S.route.id}/followups`); S.route.tab = 'followups'; $$('.tabs [role=tab]').forEach(b => b.setAttribute('aria-selected', b.dataset.t === 'followups')); renderLeadTab('followups'); const n = $('[name=outcome]'); if (n) n.focus(); };
+ACT.fuModal = t => { openModal('تسجيل متابعة — ' + t.dataset.name, followUpForm({ id: t.dataset.id, lead_status: t.dataset.status })); };
+
+/* feedback form */
+function feedbackForm() {
+  return formShell('feedback', `<input type="hidden" name="request_id" value="${N.uuid()}"><input type="hidden" name="lead_id" value="${S.cur.lead.id}"><div class="form-grid">
+  ${fld('مستوى الاهتمام', 'interest_level', sel('interest_level', opts(L.interest, 'unknown')))}
+  ${fld('اعتراض السعر', 'price_objection', sel('price_objection', opts(L.price_obj, 'unknown')))}
+  ${fld('اعتراض نمط التعلم', 'learning_mode_objection', sel('learning_mode_objection', opts(L.mode_obj, 'unknown')))}
+  ${fld('سبب عدم التسجيل', 'non_registration_reason', sel('non_registration_reason', opts(L.nonreg, 'unknown')), { hint: '«غير محدد» لا يُعد سببًا في التقارير' })}
+  ${fld('ملاحظات العميل', 'customer_feedback', txt('customer_feedback', ''), { full: true })}
+  ${fld('الإجراء المقترح', 'suggested_action', txt('suggested_action', ''), { full: true })}</div>`, { submit: 'حفظ الرأي', cancel: false });
+}
+FORM.feedback = async f => { const d = formData(f); await api('recordFeedback', { request_id: d.request_id, lead_id: d.lead_id, data: d }); toast('تم تسجيل الرأي'); renderView(); };
+
+/* enrollment form + cards */
+function enrollForm(e) {
+  e = e || {}; const edit = !!e.id, canConfirm = isMgr() || S.settings.sales_can_confirm;
+  const regOpts = Object.keys(L.reg).filter(k => k !== 'confirmed' || canConfirm || e.registration_status === 'confirmed').map(k => `<option value="${k}"${k === (e.registration_status || 'pending') ? ' selected' : ''}>${esc(L.reg[k])}</option>`).join('');
+  return formShell('enroll', `<input type="hidden" name="request_id" value="${N.uuid()}"><input type="hidden" name="id" value="${e.id || ''}"><input type="hidden" name="lead_id" value="${e.lead_id || ''}"><input type="hidden" name="version" value="${e.version || ''}"><div class="form-grid">
+  ${e.lead_id === '' ? fld('العميل', 'lead_id', sel('lead_id', '<option value="">جارٍ التحميل…</option>', ' id="enr-lead"'), { req: true, full: true }) : ''}
+  ${fld('الدورة', 'course_name', sel('course_name', '<option value="">— اختر —</option>' + S.settings.courses.map(c => `<option value="${esc(c.name)}" data-price="${c.price}"${c.name === e.course_name ? ' selected' : ''}>${esc(c.name)}</option>`).join(''), ' data-change="enrCourse"'), { req: true })}
+  ${fld('تاريخ التسجيل', 'registration_date', inp('registration_date', { type: 'date', value: e.registration_date || todayStr() }), { req: true })}
+  ${fld('بداية الدورة', 'course_start_date', inp('course_start_date', { type: 'date', value: e.course_start_date }))}
+  ${fld('سعر الدورة (ج.م)', 'course_price', inp('course_price', { type: 'number', value: e.course_price, extra: ' step="0.01" min="0" data-input="enrCalc"' }), { req: true })}
+  ${fld('الخصم (ج.م)', 'discount_amount', inp('discount_amount', { type: 'number', value: e.discount_amount || 0, extra: ' step="0.01" min="0" data-input="enrCalc"' }))}
+  ${fld('المدفوع (ج.م)', 'amount_paid', inp('amount_paid', { type: 'number', value: e.amount_paid || 0, extra: ' step="0.01" min="0" data-input="enrCalc"' }))}
+  ${fld('حالة التسجيل', 'registration_status', sel('registration_status', regOpts), { hint: canConfirm ? 'يتحول العميل إلى «تم التسجيل» عند التأكيد' : 'التأكيد للمدير فقط' })}
+  <div class="fld full"><div class="alert-box info" data-calc>الصافي: — · المتبقي: —</div></div>
+  ${edit && isMgr() && e.registration_status === 'cancelled' && e.amount_paid > 0 ? `<label class="fld full" style="font-weight:400;flex-direction:row;gap:8px"><input type="checkbox" name="refunded" style="width:auto;min-height:0"${e.payment_status === 'refunded' ? ' checked' : ''}> تم رد المبلغ المدفوع للعميل</label>` : ''}
+  <div class="fld full" data-dup-en style="display:none"><div class="alert-box warn">يوجد اشتراك فعّال لنفس العميل في هذه الدورة.</div>${isMgr() ? '<label style="font-weight:400"><input type="checkbox" name="allow_duplicate" style="width:auto;min-height:0"> أسمح صراحةً بإنشاء اشتراك إضافي لنفس الدورة</label>' : ''}</div></div>`, { submit: edit ? 'حفظ الاشتراك' : 'إنشاء الاشتراك', cancel: edit });
+}
+const calcEnr = f => { const g = k => +($(`[name=${k}]`, f).value || 0); const net = N.round2(g('course_price') - g('discount_amount')), rem = N.round2(net - g('amount_paid')); const b = $('[data-calc]', f); if (b) b.innerHTML = `الصافي: <b class="num">${money(net)}</b> · المتبقي: <b class="num">${money(rem)}</b>`; };
+INP.enrCalc = t => calcEnr(t.closest('form'));
+CHG.enrCourse = t => { const f = t.closest('form'), p = t.selectedOptions[0] && t.selectedOptions[0].dataset.price; const pr = $('[name=course_price]', f); if (p && +p > 0 && (!pr.value || pr.dataset.auto === '1')) { pr.value = p; pr.dataset.auto = '1'; } calcEnr(f); };
+document.addEventListener('focusin', e => { if (e.target.name === 'course_price') e.target.dataset.auto = '0'; });
+const observer = new MutationObserver(() => $$('form[data-form=enroll]').forEach(f => { if (!f._init) { f._init = true; calcEnr(f); } })); observer.observe(document.body, { childList: true, subtree: true });
+FORM.enroll = async f => {
+  const d = formData(f); const data = { course_name: d.course_name, registration_date: d.registration_date, course_start_date: d.course_start_date, course_price: d.course_price, discount_amount: d.discount_amount, amount_paid: d.amount_paid, registration_status: d.registration_status };
+  try {
+    if (d.id) { const patch = Object.assign({}, data); if (d.refunded) patch.payment_status = 'refunded'; await api('updateEnrollment', { id: d.id, expected_version: +d.version, patch }); toast('تم حفظ الاشتراك'); }
+    else { await api('createEnrollment', { request_id: d.request_id, lead_id: d.lead_id, data, allow_duplicate: !!($('[name=allow_duplicate]', f) && $('[name=allow_duplicate]', f).checked) }); toast('تم إنشاء الاشتراك'); }
+  } catch (e) { if (e.code === 'DUPLICATE_ENROLLMENT') $('[data-dup-en]', f).style.display = ''; throw e; }
+  const dlg = f.closest('dialog'); if (dlg) dlg.close();
+  if (S.route.name === 'lead') { S.route.tab = 'registration'; history.replaceState(null, '', `#/lead/${S.route.id}/registration`); } renderView();
+};
+function enrCard(e) {
+  const canEdit = isMgr() || (e.registration_status === 'pending' && S.settings.sales_can_register);
+  return `<div class="card" style="margin-top:10px"><div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap"><div><b>${esc(e.course_name)}</b> ${tag(e.registration_status, L.reg[e.registration_status])} ${tag(e.payment_status, L.payment[e.payment_status])}<div class="small muted">تاريخ التسجيل ${fmtD(e.registration_date)}${e.course_start_date ? ' · بداية الدورة ' + fmtD(e.course_start_date) : ''}</div></div>
+  <div class="actions">${e.registration_status !== 'cancelled' && e.remaining_amount > 0 && e.payment_status !== 'refunded' ? `<button class="btn sm" data-act="addPay" data-id="${e.id}" data-v="${e.version}" data-rem="${e.remaining_amount}">تسجيل دفعة</button>` : ''}${isMgr() && e.registration_status === 'pending' ? `<button class="btn sm primary" data-act="confirmEnr" data-id="${e.id}" data-v="${e.version}">تأكيد التسجيل</button>` : ''}${canEdit ? `<button class="btn sm" data-act="editEnr" data-id="${e.id}">تعديل</button>` : ''}${e.registration_status === 'pending' || (isMgr() && e.registration_status === 'confirmed') ? `<button class="btn sm danger" data-act="cancelEnr" data-id="${e.id}" data-v="${e.version}">إلغاء الاشتراك</button>` : ''}</div></div>
+  <div class="kv" style="margin-top:10px"><div><span>السعر</span><b>${money(e.course_price)}</b></div><div><span>الخصم</span><b>${money(e.discount_amount)}</b></div><div><span>الصافي</span><b>${money(e.net_amount)}</b></div><div><span>المدفوع</span><b>${money(e.amount_paid)}</b></div><div><span>المتبقي</span><b class="${e.remaining_amount > 0 && e.registration_status !== 'cancelled' ? 'over' : ''}">${money(e.remaining_amount)}</b></div></div></div>`;
+}
+const findEnr = id => (S.cur && S.cur.enrollments.find(x => x.id === id)) || (S.enrRows || []).find(x => x.id === id);
+ACT.editEnr = t => { const e = findEnr(t.dataset.id); openModal('تعديل الاشتراك', enrollForm(e)); };
+ACT.addPay = t => openModal('تسجيل دفعة', formShell('pay', `<input type="hidden" name="request_id" value="${N.uuid()}"><input type="hidden" name="id" value="${t.dataset.id}"><input type="hidden" name="v" value="${t.dataset.v}"><p class="small muted" style="margin-top:0">المتبقي: <b>${money(+t.dataset.rem)}</b></p>${fld('المبلغ (ج.م)', 'amount', inp('amount', { type: 'number', req: true, extra: ` step="0.01" min="0.01" max="${t.dataset.rem}"` }), { req: true })}`, { submit: 'تسجيل الدفعة' }), { sm: true });
+FORM.pay = async f => { const d = formData(f); await api('addPayment', { request_id: d.request_id, enrollment_id: d.id, amount: d.amount, expected_version: +d.v }); toast('تم تسجيل الدفعة'); f.closest('dialog').close(); renderView(); };
+ACT.confirmEnr = async t => { if (!await confirmBox({ title: 'تأكيد التسجيل', msg: 'سيتحول العميل إلى «تم التسجيل» ويُحتسب في التحويل. هل الاشتراك مؤكد فعليًا؟', ok: 'تأكيد التسجيل' })) return; await api('updateEnrollment', { id: t.dataset.id, expected_version: +t.dataset.v, patch: { registration_status: 'confirmed' } }); toast('تم تأكيد التسجيل'); renderView(); };
+ACT.cancelEnr = async t => { if (!await confirmBox({ title: 'إلغاء الاشتراك', msg: 'سيُلغى الاشتراك مع حفظ سجله. قد تتغير حالة العميل تلقائيًا. إذا كان هناك مبلغ مدفوع فعدّل الاشتراك لتسجيل الاسترداد.', ok: 'إلغاء الاشتراك', danger: true })) return; await api('updateEnrollment', { id: t.dataset.id, expected_version: +t.dataset.v, patch: { registration_status: 'cancelled' } }); toast('تم إلغاء الاشتراك'); renderView(); };
+
+/* ═════════ Follow-ups workspace ═════════ */
+async function viewFollowups(el, my) {
+  const w = await api('followUpWorkspace', { assigned_to: S.fu.rep || undefined }); if (stale(my)) return;
+  const tabs = [['today', 'اليوم', w.today], ['overdue', 'متأخرة', w.overdue], ['upcoming', 'قادمة', w.upcoming], ['recent', 'أُنجزت مؤخرًا', w.recent], ['unscheduled', 'تحتاج انتباه (بلا موعد)', w.unscheduled]];
+  if (!S.fu.tab) S.fu.tab = w.overdue.length ? 'overdue' : 'today';
+  const cur = tabs.find(t => t[0] === S.fu.tab) || tabs[0];
+  const hints = { today: 'المتبقي من مواعيد اليوم (لم يحن وقتها بعد).', overdue: 'موعدها قبل الوقت الحالي ولم تُسجَّل بعدها متابعة. لا تُعتبر مكتملة بمرور الوقت.', upcoming: 'مواعيد بعد اليوم.', recent: 'متابعات سُجّلت خلال آخر 7 أيام.', unscheduled: 'عملاء نشطون بلا موعد متابعة قادم.' };
+  let body;
+  if (!cur[2].length) body = empty('لا توجد عناصر', cur[0] === 'overdue' ? 'لا توجد متابعات متأخرة.' : 'لا شيء هنا حاليًا.');
+  else if (cur[0] === 'recent') body = `<div class="tbl-wrap"><table><thead><tr><th>العميل</th><th>النوع</th><th>النتيجة</th><th>الوقت</th><th>بواسطة</th><th>الملخص</th></tr></thead><tbody>${cur[2].map(x => `<tr><td><a href="#/lead/${x.lead_id}">${esc(x.lead_name)}</a></td><td>${esc(L.interaction[x.interaction_type])}</td><td>${esc(L.outcome[x.outcome])}</td><td class="nowrap">${fmtDT(x.interaction_at)}</td><td>${esc(x.created_by_name)}</td><td class="small">${esc(x.notes)}</td></tr>`).join('')}</tbody></table></div>`;
+  else body = `<div class="tbl-wrap"><table><thead><tr><th>العميل</th><th>الحالة</th><th>الاهتمام</th><th>المسؤول</th><th>آخر تفاعل</th><th>الإجراء القادم</th><th></th></tr></thead><tbody>${cur[2].map(l => `<tr><td class="cell-name"><b><a href="#/lead/${l.id}" style="color:inherit">${esc(l.full_name)}</a></b>${phoneCell(l)}</td><td>${tag(l.lead_status, L.lead_status[l.lead_status])}</td><td>${tag(l.interest_level, L.interest[l.interest_level])}</td><td>${esc(l.assigned_to_name)}</td>
+  <td class="small">${l.last_interaction ? `${esc(L.interaction[l.last_interaction.type])} · ${esc(L.outcome[l.last_interaction.outcome])}<div class="muted">${fmtDT(l.last_interaction.at)}</div>` : '<span class="muted">لا يوجد تواصل</span>'}</td>
+  <td class="${cur[0] === 'overdue' ? 'over' : ''}">${l.next_follow_up_at ? fmtDT(l.next_follow_up_at) : '<span class="muted">بلا موعد</span>'}</td><td class="nowrap"><button class="btn sm primary" data-act="fuModal" data-id="${l.id}" data-name="${esc(l.full_name)}" data-status="${l.lead_status}">تسجيل متابعة</button> <a class="btn sm" href="#/lead/${l.id}">فتح</a></td></tr>`).join('')}</tbody></table></div>`;
+  el.innerHTML = head('المتابعات', 'مساحة العمل اليومية. يسجّل النظام التواصل الذي تقوم به أنت يدويًا ولا يرسل رسائل.', isMgr() ? `<select data-change="fuRep" aria-label="المندوب"><option value="">كل المندوبين</option>${userOpts(S.fu.rep)}</select>` : '') +
+  `<div class="sec-tabs" role="tablist">${tabs.map(t => `<button role="tab" aria-selected="${t[0] === cur[0]}" class="${t[0] === 'overdue' && t[2].length ? 'hot' : ''}" data-act="fuTab" data-t="${t[0]}">${esc(t[1])} (${t[2].length})</button>`).join('')}</div><p class="hint">${hints[cur[0]]}</p>${body}`;
+}
+ACT.fuTab = t => { S.fu.tab = t.dataset.t; renderView(); };
+CHG.fuRep = t => { S.fu.rep = t.value; renderView(); };
+
+/* ═════════ Feedback screen ═════════ */
+async function viewFeedback(el, my) {
+  const p = rangeParams('fb'); const f = S.fb;
+  const r = await api('listFeedback', { from: p.from, to: p.to, assigned_to: p.assigned_to, non_registration_reason: f.reason, price_objection: f.price, interest_level: f.interest }); if (stale(my)) return;
+  const a = r.aggregates, mk = (map, obj) => Object.keys(obj).map(k => ({ label: map[k], value: obj[k] })).sort((x, y) => y.value - x.value);
+  const extra = `<div class="fld"><label>سبب عدم التسجيل</label><select data-change="fbF" data-k="reason"><option value="">الكل</option>${opts(L.nonreg, f.reason)}</select></div><div class="fld"><label>اعتراض السعر</label><select data-change="fbF" data-k="price"><option value="">الكل</option>${opts(L.price_obj, f.price)}</select></div><div class="fld"><label>الاهتمام</label><select data-change="fbF" data-k="interest"><option value="">الكل</option>${opts(L.interest, f.interest)}</select></div>`;
+  const nrReasons = a.non_registration_reason;
+  el.innerHTML = head('آراء العملاء وأسباب التردد', 'تُسجَّل الآراء من ملف العميل. غياب الرأي لا يُعتبر سببًا لعدم التسجيل.', '') + `<div class="card" style="margin-bottom:16px">${rangeBars('fb', { extra })}</div>` +
+  (!r.rows.length ? `<div class="card">${empty('لا توجد آراء مسجلة', 'افتح ملف عميل وسجّل رأيه من تبويب «سجل الآراء».', '<a class="btn" href="#/leads">فتح العملاء</a>')}</div>` :
+  `<div class="grid g-2"><div class="card"><h2>أسباب عدم التسجيل</h2>${bars(mk(L.nonreg, nrReasons))}<p class="hint" style="margin:10px 0 0">منفصلة: لا رد · رفض صريح · قرار مؤجل · السعر · نمط التعلم… وعدد السجلات بسبب «غير محدد»: <b>${a.unknown_reason}</b> (غير محتسب كسبب).</p></div>
+  <div class="card"><h2>اعتراض السعر</h2>${bars(mk(L.price_obj, a.price_objection))}</div><div class="card"><h2>اعتراض نمط التعلم</h2>${bars(mk(L.mode_obj, a.learning_mode_objection))}<p class="hint" style="margin:10px 0 0">«يفضّل الحضوري» يُعرض منفصلًا عن بقية الاعتراضات.</p></div></div>
+  <div class="card" style="margin-top:16px"><h2>السجلات (${a.total})</h2><div class="tbl-wrap"><table><thead><tr><th>التاريخ</th><th>العميل</th><th>سجّله</th><th>الاهتمام</th><th>السعر</th><th>نمط التعلم</th><th>سبب عدم التسجيل</th><th>ملاحظات العميل</th><th>الإجراء المقترح</th></tr></thead><tbody>${r.rows.map(x => `<tr><td class="nowrap">${fmtDT(x.recorded_at)}</td><td><a href="#/lead/${x.lead_id}">${esc(x.lead_name)}</a></td><td>${esc(x.recorded_by_name)}</td><td>${tag(x.interest_level, L.interest[x.interest_level])}</td><td>${esc(L.price_obj[x.price_objection])}</td><td>${esc(L.mode_obj[x.learning_mode_objection])}</td><td>${esc(L.nonreg[x.non_registration_reason])}</td><td class="small">${esc(x.customer_feedback || '—')}</td><td class="small">${esc(x.suggested_action || '—')}</td></tr>`).join('')}</tbody></table></div></div>`);
+}
+CHG.fbF = t => { S.fb[t.dataset.k] = t.value; renderView(); };
+
+/* ═════════ Enrollments ═════════ */
+async function viewEnrollments(el, my) {
+  const f = S.en; const rows = await api('listEnrollments', { registration_status: f.reg, payment_status: f.pay, from: f.from, to: f.to }); if (stale(my)) return; S.enrRows = rows;
+  const live = rows.filter(r => r.registration_status !== 'cancelled' && r.payment_status !== 'refunded');
+  const sum = k => N.round2(live.reduce((s, r) => s + r[k], 0));
+  el.innerHTML = head('الاشتراكات', 'التسجيلات والمدفوعات', '<button class="btn primary" data-act="newEnr">+ اشتراك جديد</button>') +
+  `<div class="filters"><div class="fld"><label>حالة التسجيل</label><select data-change="enF" data-k="reg"><option value="">الكل</option>${opts(L.reg, f.reg)}</select></div><div class="fld"><label>حالة الدفع</label><select data-change="enF" data-k="pay"><option value="">الكل</option>${opts(L.payment, f.pay)}</select></div><div class="fld"><label>من</label><input type="date" data-change="enF" data-k="from" value="${esc(f.from)}"></div><div class="fld"><label>إلى</label><input type="date" data-change="enF" data-k="to" value="${esc(f.to)}"></div></div>` +
+  (!rows.length ? `<div class="card">${empty('لا توجد اشتراكات', 'تظهر هنا الاشتراكات التي تُنشأ من ملفات العملاء.', '<button class="btn primary" data-act="newEnr">+ اشتراك جديد</button>')}</div>` :
+  `<div class="tbl-wrap"><table><thead><tr><th>العميل</th><th>الدورة</th><th>تاريخ التسجيل</th><th>الصافي</th><th>المدفوع</th><th>المتبقي</th><th>الدفع</th><th>التسجيل</th><th></th></tr></thead><tbody>${rows.map(e => `<tr><td><a href="#/lead/${e.lead_id}">${esc(e.lead_name)}</a></td><td>${esc(e.course_name)}</td><td class="nowrap">${fmtD(e.registration_date)}</td><td>${money(e.net_amount)}</td><td>${money(e.amount_paid)}</td><td class="${e.remaining_amount > 0 && e.registration_status !== 'cancelled' ? 'over' : ''}">${money(e.remaining_amount)}</td><td>${tag(e.payment_status, L.payment[e.payment_status])}</td><td>${tag(e.registration_status, L.reg[e.registration_status])}</td><td><a class="btn sm" href="#/lead/${e.lead_id}/registration">فتح</a></td></tr>`).join('')}</tbody></table></div>
+  <p class="hint">إجمالي الصافي ${money(sum('net_amount'))} · المدفوع ${money(sum('amount_paid'))} · المتبقي ${money(sum('remaining_amount'))} — للصفوف المعروضة دون الملغي والمسترد.</p>`);
+}
+CHG.enF = t => { S.en[t.dataset.k] = t.value; renderView(); };
+ACT.newEnr = async () => {
+  const d = openModal('اشتراك جديد', enrollForm({ lead_id: '' }));
+  const res = await api('listLeads', { page_size: 200, sort: 'full_name', dir: 'asc' }); const s = $('#enr-lead', d); if (!s) return;
+  s.innerHTML = '<option value="">— اختر العميل —</option>' + res.rows.filter(l => l.lead_status !== 'lost').map(l => `<option value="${l.id}">${esc(l.full_name)} — ${esc(N.displayPhone(l.normalized_phone))}</option>`).join('');
+};
+
+/* ═════════ Reports ═════════ */
+async function viewReports(el, my) {
+  const p = rangeParams('rep'); const r = await api('getReports', p); if (stale(my)) return;
+  el.innerHTML = head('التقارير', 'أداء الفريق ومصادر العملاء — تُحسب من السجلات الفعلية', '<button class="btn" data-act="exportReport">تصدير تقرير الأداء CSV</button>') + `<div class="card" style="margin-bottom:16px">${rangeBars('rep')}${noteBlock(r)}</div>` +
+  (r.empty ? `<div class="card">${empty('لا توجد بيانات بعد', 'لن تظهر تقارير قبل وجود عملاء مسجلين.')}</div>` : `
+  <div class="card"><h2>${isMgr() ? 'أداء المندوبين' : 'أدائي'}</h2><div class="tbl-wrap"><table><thead><tr><th>المندوب</th><th>العملاء المسندون</th><th>تم التواصل</th><th>تسجيلات مؤكدة</th><th>معدل التحويل</th><th>متأخرة (الآن)</th><th>متابعات مسجلة</th><th>وسيط أول تواصل</th></tr></thead><tbody>${r.by_rep.map(x => `<tr><td>${esc(x.name)}${x.active ? '' : ' ' + tag('lost', 'غير نشط')}</td><td>${x.assigned}</td><td>${x.contacted}</td><td>${x.converted}</td><td>${P(x.rate)}</td><td class="${x.overdue ? 'over' : ''}">${x.overdue}</td><td>${x.completed_followups}</td><td>${x.median_first_contact_hours == null ? `<span class="muted small">بيانات غير كافية (${x.median_n})</span>` : x.median_first_contact_hours + ' ساعة'}</td></tr>`).join('')}</tbody></table></div></div>
+  <div class="card"><h2>التحويل حسب المصدر</h2>${r.by_source.length ? `<div class="tbl-wrap"><table><thead><tr><th>المصدر</th><th>العملاء</th><th>تسجيلات مؤكدة</th><th>معدل التحويل</th></tr></thead><tbody>${r.by_source.map(s => `<tr><td>${esc(s.label)}</td><td>${s.leads}</td><td>${s.converted}</td><td>${P(s.rate)}</td></tr>`).join('')}</tbody></table></div>` : '<div class="muted">لا توجد بيانات</div>'}</div>
+  <div class="card"><h2>أسباب عدم التسجيل</h2>${reasonBars(r.non_registration)}</div>
+  <div class="card"><h2>إنجاز المتابعات</h2><p style="margin:0">${r.followup_completion.completed} من ${r.followup_completion.due} موعد حان وقته (${P(r.followup_completion.rate)}).</p></div>`);
+}
+ACT.exportReport = async () => { const r = await api('exportReport', rangeParams('rep')); await saveFile(r.filename, r.csv); };
+
+/* ═════════ Users ═════════ */
+async function viewUsers(el, my) {
+  const users = await api('listUsers'); if (stale(my)) return; S.dir = users;
+  el.innerHTML = head('المستخدمون والصلاحيات', 'إدارة الحسابات والأدوار — للمدير فقط', '<button class="btn primary" data-act="newUser">+ إضافة مستخدم</button>') +
+  `<div class="alert-box ${REMOTE ? 'info' : 'warn'}" style="margin-bottom:14px">${REMOTE ? '<b>الحسابات والأدوار:</b> يُنشئ المستخدمين من Supabase Auth، وتُفعّلهم وتحدد أدوارهم من هنا. تنفيذ الصلاحيات في قاعدة البيانات.' : '<b>وضع تجريبي:</b> هنا يُضاف الملف الشخصي فقط. في الإنتاج تُنشأ الحسابات عبر Supabase Auth (دعوة بالبريد) ويرتبط الملف الشخصي بمعرّف المصادقة؛ لا تُدار كلمات المرور في هذه الواجهة.'}</div>
+  <div class="tbl-wrap"><table><thead><tr><th>الاسم</th><th>البريد</th><th>الدور</th><th>الحالة</th><th>عملاء نشطون</th><th></th></tr></thead><tbody>${users.map(u => `<tr><td><b>${esc(u.full_name)}</b>${u.id === S.me.id ? ' <span class="muted small">(أنت)</span>' : ''}</td><td>${u.email ? num(u.email) : '—'}</td>
+  <td>${u.id === S.me.id ? esc(L.role[u.role]) : `<select data-change="userRole" data-id="${u.id}" aria-label="دور ${esc(u.full_name)}">${opts(L.role, u.role)}</select>`}</td><td>${u.is_active ? tag('converted', 'نشط') : tag('lost', 'غير نشط')}</td><td>${u.assigned_count}</td>
+  <td>${u.id === S.me.id ? '' : `<button class="btn sm ${u.is_active ? 'danger' : ''}" data-act="toggleUser" data-id="${u.id}" data-active="${u.is_active ? 1 : ''}" data-n="${u.assigned_count}">${u.is_active ? 'تعطيل' : 'تفعيل'}</button>`}</td></tr>`).join('')}</tbody></table></div>
+  <div class="card" style="margin-top:16px"><h2>مصفوفة الصلاحيات</h2><div class="tbl-wrap"><table><thead><tr><th>الإجراء</th><th>مدير</th><th>مندوب</th></tr></thead><tbody>${[['عرض كل العملاء', 1, 0], ['عرض العملاء المسندين له فقط', 1, 1], ['إضافة وتعديل العملاء', 1, 'المسندون له'], ['إسناد وإعادة إسناد العملاء', 1, 0], ['تسجيل المتابعات والآراء', 1, 'عملاؤه'], ['إنشاء اشتراك', 1, 'حسب الإعدادات'], ['تأكيد التسجيل (التحويل)', 1, 'حسب الإعدادات'], ['إدارة المستخدمين والأدوار', 1, 0], ['سجل التغييرات والإعدادات', 1, 0], ['أرشفة العملاء', 1, 0]].map(r => `<tr><td>${r[0]}</td><td>${r[1] ? '✓' : '—'}</td><td>${r[2] === 1 ? '✓' : r[2] === 0 ? '—' : esc(r[2])}</td></tr>`).join('')}</tbody></table></div></div>`;
+}
+CHG.userRole = async t => { try { await api('updateUser', { id: t.dataset.id, patch: { role: t.value } }); toast('تم تغيير الدور'); } catch (e) { fail(e); } renderView(); };
+ACT.newUser = () => REMOTE ? openModal('إضافة مستخدم', '<p style="margin-top:0">تُنشأ الحسابات من لوحة Supabase: <b>Authentication ← Users ← Add user</b> (مع تفعيل Auto Confirm). بعد إنشائه يظهر هنا <b>غير نشط</b> وتستطيع تفعيله وتحديد دوره من هذه الشاشة.</p><div class="form-foot"><button class="btn primary" data-act="closeModal">حسنًا</button></div>', { sm: true }) : openModal('إضافة مستخدم', formShell('newUser', `<div class="form-grid">${fld('الاسم الكامل', 'full_name', inp('full_name', { req: true }), { req: true })}${fld('البريد الإلكتروني', 'email', inp('email', { type: 'email', req: true }), { req: true })}${fld('الدور', 'role', sel('role', opts(L.role, 'sales')))}</div>`, { submit: 'إضافة' }), { sm: true });
+FORM.newUser = async f => { await api('createUser', formData(f)); toast('تمت إضافة المستخدم'); f.closest('dialog').close(); renderView(); };
+ACT.toggleUser = async t => {
+  const id = t.dataset.id, active = !!t.dataset.active;
+  if (!active) { if (!await confirmBox({ title: 'تفعيل الحساب', msg: 'سيتمكن المستخدم من الدخول مجددًا.', ok: 'تفعيل' })) return; await api('updateUser', { id, patch: { is_active: true } }); toast('تم تفعيل الحساب'); renderView(); return; }
+  if (+t.dataset.n > 0) { openModal('تعطيل مستخدم لديه عملاء', formShell('deactivate', `<input type="hidden" name="id" value="${id}"><p class="small" style="margin-top:0">لدى هذا المستخدم ${t.dataset.n} عميل نشط. اختر من ستُنقل إليه ملفاتهم قبل التعطيل.</p>${fld('نقل العملاء إلى', 'reassign_to', sel('reassign_to', userOpts('', true).replace(new RegExp(`<option value="${id}"[^>]*>.*?</option>`), '')))}`, { submit: 'نقل وتعطيل' }), { sm: true }); return; }
+  if (!await confirmBox({ title: 'تعطيل الحساب', msg: 'لن يتمكن المستخدم من الدخول وستنتهي جلساته.', ok: 'تعطيل', danger: true })) return; await api('updateUser', { id, patch: { is_active: false } }); toast('تم تعطيل الحساب'); renderView();
+};
+FORM.deactivate = async f => { const d = formData(f); await api('updateUser', { id: d.id, patch: { is_active: false, reassign_to: d.reassign_to } }); toast('تم نقل العملاء وتعطيل الحساب'); f.closest('dialog').close(); renderView(); };
+
+/* ═════════ Audit ═════════ */
+const ACT_AR = { 'lead.created': 'إنشاء عميل', 'lead.updated': 'تعديل عميل', 'lead.status_changed': 'تغيير حالة', 'lead.assigned': 'إسناد', 'lead.archived': 'أرشفة', 'lead.restored': 'استعادة', 'enrollment.created': 'إنشاء اشتراك', 'enrollment.status_changed': 'تغيير حالة اشتراك', 'enrollment.corrected': 'تصحيح اشتراك', 'enrollment.payment': 'دفعة', 'user.created': 'إنشاء مستخدم', 'user.role_changed': 'تغيير دور', 'user.deactivated': 'تعطيل مستخدم', 'user.activated': 'تفعيل مستخدم', 'settings.updated': 'تعديل الإعدادات', 'export.leads': 'تصدير عملاء', 'export.report': 'تصدير تقرير', 'import.leads': 'استيراد', 'demo.test_data_loaded': 'تحميل بيانات اختبار' };
+const auditTable = rows => `<div class="tbl-wrap"><table><thead><tr><th>الوقت</th><th>المنفّذ</th><th>الإجراء</th><th>الملخص</th></tr></thead><tbody>${rows.map(x => `<tr><td class="nowrap">${fmtDT(x.timestamp)}</td><td>${esc(x.actor_name)}</td><td>${esc(ACT_AR[x.action] || x.action)}</td><td class="small">${esc(x.safe_change_summary)}</td></tr>`).join('')}</tbody></table></div>`;
+async function viewAudit(el, my) {
+  const a = S.au; const r = await api('listAudit', { entity_type: a.entity, from: a.from, to: a.to, page: a.page }); if (stale(my)) return;
+  const pages = Math.max(1, Math.ceil(r.total / r.page_size));
+  el.innerHTML = head('سجل التغييرات', 'سجل للقراءة فقط يُنشأ تلقائيًا ولا يمكن تعديله أو حذفه من الواجهة', '') + `<div class="filters"><div class="fld"><label>نوع السجل</label><select data-change="auF" data-k="entity"><option value="">الكل</option>${opts({ lead: 'عميل', enrollment: 'اشتراك', user: 'مستخدم', settings: 'إعدادات', export: 'تصدير', import: 'استيراد' }, a.entity)}</select></div><div class="fld"><label>من</label><input type="date" data-change="auF" data-k="from" value="${esc(a.from)}"></div><div class="fld"><label>إلى</label><input type="date" data-change="auF" data-k="to" value="${esc(a.to)}"></div></div>` +
+  (r.rows.length ? auditTable(r.rows) + `<div class="pager"><span class="muted small">${r.total} سجل · صفحة ${r.page} من ${pages}</span><span class="actions"><button class="btn sm" data-act="auPage" data-p="${r.page - 1}"${r.page <= 1 ? ' disabled' : ''}>السابق</button><button class="btn sm" data-act="auPage" data-p="${r.page + 1}"${r.page >= pages ? ' disabled' : ''}>التالي</button></span></div>` : `<div class="card">${empty('لا توجد سجلات', 'تُسجَّل التغييرات المهمة تلقائيًا عند حدوثها.')}</div>`);
+}
+CHG.auF = t => { S.au[t.dataset.k] = t.value; S.au.page = 1; renderView(); };
+ACT.auPage = t => { S.au.page = +t.dataset.p; renderView(); };
+
+/* ═════════ Settings ═════════ */
+async function viewSettings(el, my) {
+  const s = await api('getSettings'); S.settings = s; if (stale(my)) return;
+  el.innerHTML = head('الإعدادات', '', '') +
+  `<div class="card"><h2>حالة الاتصال بالخادم</h2><div class="alert-box warn"><b>وضع تجريبي (Demo adapter).</b> لا يوجد اتصال بقاعدة بيانات أو مصادقة. تُحفظ البيانات في ذاكرة هذا المتصفح ${ST.storageOK ? '(التخزين المحلي يعمل)' : '(<b>التخزين المحلي غير متاح</b> — ستضيع البيانات عند التحديث)'}. لا مشاركة بين الأجهزة أو المستخدمين. راجع ملف DEPLOYMENT.md للنشر الآمن مع Supabase.</div></div>
+  <div class="card"><h2>الدورات وأسعارها</h2><form data-form="courses" novalidate><div id="course-rows">${s.courses.map(courseRow).join('')}</div><div class="actions" style="margin-top:8px"><button type="button" class="btn sm" data-act="addCourse">+ إضافة دورة</button></div><div class="form-err"></div><div class="form-foot"><button class="btn primary" type="submit">حفظ الدورات</button></div></form></div>
+  <div class="card"><h2>قواعد التسجيل</h2><form data-form="rules" novalidate><label style="display:flex;gap:8px;margin-bottom:8px"><input type="checkbox" name="sales_can_register"${s.sales_can_register ? ' checked' : ''}> يمكن للمندوب إنشاء اشتراكات (قيد التأكيد) وتسجيل دفعات لعملائه</label>
+  <label style="display:flex;gap:8px;margin-bottom:8px"><input type="checkbox" name="sales_can_confirm"${s.sales_can_confirm ? ' checked' : ''}> يمكن للمندوب تأكيد التسجيل (يحوّل العميل إلى «تم التسجيل»)</label>
+  <label style="display:flex;gap:8px"><input type="checkbox" name="require_deposit"${s.require_deposit ? ' checked' : ''}> لا يُؤكد التسجيل دون دفعة مقدمة أكبر من صفر</label><div class="form-err"></div><div class="form-foot"><button class="btn primary" type="submit">حفظ القواعد</button></div></form></div>
+  <div class="card"><h2>أدوات الوضع التجريبي</h2><p class="small muted" style="margin-top:0">لأغراض الاختبار فقط. لا توجد هذه الأدوات في النسخة الإنتاجية.</p>
+  <label style="display:flex;gap:8px;margin-bottom:12px"><input type="checkbox" data-change="offline"${OFFLINE.on ? ' checked' : ''}> محاكاة انقطاع الشبكة (لاختبار رسائل فشل الحفظ)</label>
+  <div class="actions"><button class="btn" data-act="loadTest">تحميل بيانات اختبار (30 عميلًا)</button><button class="btn danger" data-act="resetDemo">مسح كل بيانات العملاء التجريبية</button></div></div>`;
+  if (REMOTE) $$('.card', el).forEach(c => { const h = $('h2', c); if (!h) return; if (h.textContent.includes('أدوات الوضع التجريبي')) c.remove(); else if (h.textContent.includes('حالة الاتصال')) c.innerHTML = '<h2>حالة الاتصال بالخادم</h2><div class="alert-box ok">متصل بقاعدة بيانات Supabase. المصادقة والصلاحيات (RLS) تُفرض داخل قاعدة البيانات. <span class="num">' + esc(CFG.url) + '</span></div>'; });
+}
+const courseRow = c => `<div class="form-grid" style="grid-template-columns:2fr 1fr auto;align-items:end;margin-bottom:8px" data-course><div class="fld"><label>اسم الدورة</label><input type="text" name="cname" value="${esc(c.name)}"></div><div class="fld"><label>السعر الافتراضي (ج.م)</label><input type="number" name="cprice" min="0" step="0.01" value="${esc(c.price)}"></div><button type="button" class="btn sm danger" data-act="rmCourse">حذف</button></div>`;
+ACT.addCourse = () => { $('#course-rows').insertAdjacentHTML('beforeend', courseRow({ name: '', price: 0 })); };
+ACT.rmCourse = t => t.closest('[data-course]').remove();
+FORM.courses = async f => { const courses = $$('[data-course]', f).map(r => ({ name: $('[name=cname]', r).value, price: $('[name=cprice]', r).value })).filter(c => c.name.trim() || +c.price); await api('updateSettings', { settings: { courses } }); toast('تم حفظ الدورات'); S.settings = await api('getSettings'); renderView(); };
+FORM.rules = async f => { const g = n => $(`[name=${n}]`, f).checked; await api('updateSettings', { settings: { sales_can_register: g('sales_can_register'), sales_can_confirm: g('sales_can_confirm'), require_deposit: g('require_deposit') } }); toast('تم حفظ القواعد'); S.settings = await api('getSettings'); };
+CHG.offline = t => { OFFLINE.on = t.checked; updateOfflineFlag(); toast(OFFLINE.on ? 'تم تفعيل محاكاة انقطاع الشبكة' : 'تم إيقاف المحاكاة'); };
+ACT.offlineOff = () => { OFFLINE.on = false; updateOfflineFlag(); toast('تم إيقاف المحاكاة'); renderView(); };
+ACT.loadTest = async () => { if (!await confirmBox({ title: 'تحميل بيانات اختبار', msg: 'سيُضاف 30 عميلًا تجريبيًا مع متابعات وآراء واشتراكات مولّدة لأغراض الاختبار فقط. ستظهر في التقارير كأي بيانات.', ok: 'تحميل' })) return; const r = await api('demoLoadTestData'); toast(`تم تحميل ${r.leads} عميل اختبار`); };
+ACT.resetDemo = async () => { if (!await confirmBox({ title: 'مسح البيانات التجريبية', msg: 'سيُحذف كل العملاء والمتابعات والآراء والاشتراكات وسجل التغييرات من هذا المتصفح. لا يمكن التراجع.', ok: 'مسح كل شيء', danger: true })) return; await api('demoReset'); toast('تم مسح البيانات التجريبية'); refreshBadge(); };
+
+/* ═════════ Start ═════════ */
+window.addEventListener('DOMContentLoaded', boot);
+if (document.readyState !== 'loading') boot();
+})();
+
+</script>
+</body>
+</html>
